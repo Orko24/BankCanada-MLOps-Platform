@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database for metadata and model registry
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: bankcanada_mlops
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secure_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./data/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mlops_network
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mlops_network
+
+  # MLflow tracking server
+  mlflow:
+    build: ./mlops/mlflow
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=postgresql://admin:secure_password@postgres:5432/bankcanada_mlops
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=./artifacts
+    depends_on:
+      - postgres
+    volumes:
+      - mlflow_artifacts:/app/artifacts
+    networks:
+      - mlops_network
+
+  # FastAPI application
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://admin:secure_password@postgres:5432/bankcanada_mlops
+      - REDIS_URL=redis://redis:6379
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    depends_on:
+      - postgres
+      - redis
+      - mlflow
+    volumes:
+      - ./api:/app
+      - ./data:/app/data
+    networks:
+      - mlops_network
+
+  # Economic data ingestion worker
+  worker:
+    build: ./workers
+    environment:
+      - DATABASE_URL=postgresql://admin:secure_password@postgres:5432/bankcanada_mlops
+      - REDIS_URL=redis://redis:6379
+      - BANK_CANADA_API_URL=https://www.bankofcanada.ca/valet/
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./data:/app/data
+    networks:
+      - mlops_network
+
+  # Web dashboard
+  web:
+    build: ./web
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_MLFLOW_URL=http://localhost:5000
+    depends_on:
+      - api
+    volumes:
+      - ./web:/app
+    networks:
+      - mlops_network
+
+  # Monitoring and observability
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - mlops_network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - mlops_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  mlflow_artifacts:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  mlops_network:
+    driver: bridge

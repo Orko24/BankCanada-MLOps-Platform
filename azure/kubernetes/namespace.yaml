@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mlops-production
+  labels:
+    name: mlops-production
+    environment: production
+    project: bankcanada-mlops
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: mlops-resource-quota
+  namespace: mlops-production
+spec:
+  hard:
+    requests.cpu: "4"
+    requests.memory: 8Gi
+    limits.cpu: "8"
+    limits.memory: 16Gi
+    persistentvolumeclaims: "10"
+    pods: "20"
+    services: "10"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mlops-limit-range
+  namespace: mlops-production
+spec:
+  limits:
+  - default:
+      cpu: "500m"
+      memory: "512Mi"
+    defaultRequest:
+      cpu: "100m"
+      memory: "128Mi"
+    type: Container

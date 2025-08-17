@@ -1,0 +1,481 @@
+# Bank of Canada MLOps Platform - Azure DevOps Pipeline
+# 
+# Enterprise CI/CD pipeline for automated deployment of ML models
+# and infrastructure to Azure cloud environment
+
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+  paths:
+    include:
+    - api/*
+    - web/*
+    - databricks/*
+    - azure/*
+    - requirements.txt
+    - docker-compose.yml
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - api/*
+    - web/*
+    - databricks/*
+    - azure/*
+    - requirements.txt
+
+variables:
+  # Azure Configuration
+  azureSubscription: 'BankCanada-MLOps-ServiceConnection'
+  resourceGroupName: 'bankcanada-mlops-rg'
+  location: 'Canada Central'
+  
+  # Container Registry
+  containerRegistry: 'bankcanadamlops.azurecr.io'
+  imageRepository: 'economic-forecasting-api'
+  dockerfilePath: '$(Build.SourcesDirectory)/api/Dockerfile'
+  
+  # Azure ML Configuration
+  azureMLWorkspace: 'bankcanada-ml-workspace'
+  
+  # Kubernetes Configuration
+  kubernetesCluster: 'bankcanada-aks-cluster'
+  kubernetesNamespace: 'mlops-production'
+  
+  # Environment Variables
+  buildConfiguration: 'Release'
+  pythonVersion: '3.9'
+  nodeVersion: '18.x'
+
+stages:
+# ============================================================================
+# BUILD STAGE
+# ============================================================================
+- stage: Build
+  displayName: 'Build and Test'
+  jobs:
+  
+  # API Build and Test
+  - job: BuildAPI
+    displayName: 'Build Python API'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+        displayName: 'Use Python $(pythonVersion)'
+    
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov black flake8 mypy
+      displayName: 'Install dependencies'
+    
+    - script: |
+        black --check api/
+        flake8 api/ --max-line-length=88 --extend-ignore=E203,W503
+      displayName: 'Code quality checks'
+    
+    - script: |
+        pytest api/tests/ --cov=api --cov-report=xml --cov-report=html
+      displayName: 'Run API tests'
+    
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: '**/test-*.xml'
+        testRunTitle: 'Publish API test results'
+    
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+  
+  # Web Build and Test
+  - job: BuildWeb
+    displayName: 'Build React Web App'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '$(nodeVersion)'
+      displayName: 'Use Node.js $(nodeVersion)'
+    
+    - script: |
+        cd web
+        npm ci
+        npm run lint
+        npm run test -- --coverage --watchAll=false
+        npm run build
+      displayName: 'Build and test web application'
+    
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: 'web/coverage/clover.xml'
+        testRunTitle: 'Publish web test results'
+    
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: 'web/build'
+        ArtifactName: 'web-dist'
+        publishLocation: 'Container'
+  
+  # Docker Build
+  - job: BuildDocker
+    displayName: 'Build Docker Images'
+    dependsOn: [BuildAPI, BuildWeb]
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: Docker@2
+      displayName: 'Build API Docker image'
+      inputs:
+        command: 'buildAndPush'
+        repository: '$(imageRepository)'
+        dockerfile: '$(dockerfilePath)'
+        containerRegistry: '$(containerRegistry)'
+        tags: |
+          $(Build.BuildId)
+          latest
+
+# ============================================================================
+# SECURITY SCANNING STAGE
+# ============================================================================
+- stage: SecurityScan
+  displayName: 'Security and Compliance'
+  dependsOn: Build
+  condition: succeeded()
+  
+  jobs:
+  - job: SecurityScanning
+    displayName: 'Security Vulnerability Scanning'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    # Container Security Scanning
+    - task: AquaSecurityTrivy@1
+      inputs:
+        image: '$(containerRegistry)/$(imageRepository):$(Build.BuildId)'
+        exitCode: '1'
+      displayName: 'Container vulnerability scan'
+    
+    # Dependency Scanning
+    - task: PythonSecurityScan@1
+      inputs:
+        scanType: 'bandit'
+        targetPath: 'api/'
+      displayName: 'Python security scan'
+    
+    # Infrastructure Security
+    - task: AzSecurityCenter@3
+      inputs:
+        azureSubscription: '$(azureSubscription)'
+        resourceGroupName: '$(resourceGroupName)'
+      displayName: 'Azure Security Center assessment'
+
+# ============================================================================
+# DATABRICKS DEPLOYMENT STAGE
+# ============================================================================
+- stage: DeployDatabricks
+  displayName: 'Deploy Databricks Notebooks'
+  dependsOn: SecurityScan
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  
+  jobs:
+  - deployment: DatabricksDeployment
+    displayName: 'Deploy to Databricks'
+    environment: 'production'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(pythonVersion)'
+          
+          - script: |
+              pip install databricks-cli
+            displayName: 'Install Databricks CLI'
+          
+          - task: AzureKeyVault@2
+            inputs:
+              azureSubscription: '$(azureSubscription)'
+              KeyVaultName: 'bankcanada-kv'
+              SecretsFilter: 'databricks-token'
+              RunAsPreJob: true
+          
+          - script: |
+              databricks configure --token <<< "$(databricks-token)"
+              databricks workspace import_dir databricks/notebooks /Workspace/BankCanada/ --overwrite
+            displayName: 'Deploy Databricks notebooks'
+          
+          - script: |
+              databricks jobs create --json-file azure/databricks-job-config.json
+            displayName: 'Create Databricks jobs'
+
+# ============================================================================
+# AZURE ML DEPLOYMENT STAGE
+# ============================================================================
+- stage: DeployAzureML
+  displayName: 'Deploy to Azure ML'
+  dependsOn: DeployDatabricks
+  condition: succeeded()
+  
+  jobs:
+  - deployment: AzureMLDeployment
+    displayName: 'Deploy ML Models'
+    environment: 'production'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureMLCLI@1
+            inputs:
+              azureSubscription: '$(azureSubscription)'
+              resourceGroup: '$(resourceGroupName)'
+              workspaceName: '$(azureMLWorkspace)'
+              runType: 'deployModel'
+              modelPath: 'models/economic_forecasting_model'
+              deploymentName: 'economic-forecasting-endpoint'
+              computeType: 'ACI'
+              deploymentConfigFile: 'azure/ml-deployment-config.json'
+
+# ============================================================================
+# INFRASTRUCTURE DEPLOYMENT STAGE  
+# ============================================================================
+- stage: DeployInfrastructure
+  displayName: 'Deploy Infrastructure'
+  dependsOn: SecurityScan
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+  
+  jobs:
+  - deployment: InfrastructureDeployment
+    displayName: 'Deploy Azure Infrastructure'
+    environment: 'production'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: '$(azureSubscription)'
+              subscriptionId: '$(subscriptionId)'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: '$(resourceGroupName)'
+              location: '$(location)'
+              templateLocation: 'Linked artifact'
+              csmFile: 'azure/infrastructure/main.bicep'
+              csmParametersFile: 'azure/infrastructure/parameters.json'
+              deploymentMode: 'Incremental'
+              deploymentName: 'BankCanada-MLOps-$(Build.BuildId)'
+
+# ============================================================================
+# APPLICATION DEPLOYMENT STAGE
+# ============================================================================
+- stage: DeployApplication
+  displayName: 'Deploy Applications'
+  dependsOn: [DeployInfrastructure, DeployAzureML]
+  condition: succeeded()
+  
+  jobs:
+  # Deploy API to AKS
+  - deployment: DeployAPI
+    displayName: 'Deploy API to AKS'
+    environment: 'production'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@0
+            inputs:
+              action: 'deploy'
+              kubernetesServiceConnection: '$(kubernetesCluster)'
+              namespace: '$(kubernetesNamespace)'
+              manifests: |
+                azure/kubernetes/api-deployment.yaml
+                azure/kubernetes/api-service.yaml
+                azure/kubernetes/api-ingress.yaml
+              containers: '$(containerRegistry)/$(imageRepository):$(Build.BuildId)'
+  
+  # Deploy Web App to Azure App Service
+  - deployment: DeployWebApp
+    displayName: 'Deploy Web App'
+    environment: 'production'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'web-dist'
+              downloadPath: '$(System.ArtifactsDirectory)'
+          
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: '$(azureSubscription)'
+              appType: 'webApp'
+              appName: 'bankcanada-mlops-web'
+              package: '$(System.ArtifactsDirectory)/web-dist'
+              deploymentMethod: 'auto'
+
+# ============================================================================
+# POST-DEPLOYMENT TESTING STAGE
+# ============================================================================
+- stage: PostDeploymentTests
+  displayName: 'Post-Deployment Testing'
+  dependsOn: DeployApplication
+  condition: succeeded()
+  
+  jobs:
+  - job: IntegrationTests
+    displayName: 'Integration Tests'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+    
+    - script: |
+        pip install pytest requests
+        pytest tests/integration/ --junitxml=integration-test-results.xml
+      displayName: 'Run integration tests'
+      env:
+        API_BASE_URL: 'https://bankcanada-mlops-api.azurewebsites.net'
+    
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: 'integration-test-results.xml'
+        testRunTitle: 'Integration Tests'
+  
+  - job: LoadTests
+    displayName: 'Performance Load Tests'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: AzureLoadTest@1
+      inputs:
+        azureSubscription: '$(azureSubscription)'
+        loadTestConfigFile: 'tests/load-test-config.yaml'
+        resourceGroup: '$(resourceGroupName)'
+        loadTestResource: 'bankcanada-loadtest'
+
+# ============================================================================
+# MONITORING SETUP STAGE
+# ============================================================================
+- stage: SetupMonitoring
+  displayName: 'Configure Monitoring'
+  dependsOn: PostDeploymentTests
+  condition: succeeded()
+  
+  jobs:
+  - job: ConfigureMonitoring
+    displayName: 'Setup Monitoring and Alerts'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(azureSubscription)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Create Application Insights alerts
+          az monitor metrics alert create \
+            --name "API-HighErrorRate" \
+            --resource-group $(resourceGroupName) \
+            --scopes "/subscriptions/$(subscriptionId)/resourceGroups/$(resourceGroupName)/providers/Microsoft.Web/sites/bankcanada-mlops-api" \
+            --condition "avg requests/failed > 10" \
+            --description "High API error rate detected"
+          
+          # Setup Log Analytics queries
+          az monitor log-analytics query \
+            --workspace "bankcanada-logs" \
+            --analytics-query 'requests | where success == false | summarize count() by bin(timestamp, 5m)'
+      displayName: 'Configure monitoring alerts'
+
+# ============================================================================
+# NOTIFICATION STAGE
+# ============================================================================
+- stage: Notification
+  displayName: 'Deployment Notifications'
+  dependsOn: SetupMonitoring
+  condition: always()
+  
+  jobs:
+  - job: SendNotifications
+    displayName: 'Send Deployment Notifications'
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    steps:
+    - task: HttpRequest@1
+      inputs:
+        url: '$(slackWebhookUrl)'
+        method: 'POST'
+        body: |
+          {
+            "text": "🏦 Bank of Canada MLOps Deployment Complete",
+            "attachments": [
+              {
+                "color": "good",
+                "fields": [
+                  {
+                    "title": "Build",
+                    "value": "$(Build.BuildNumber)",
+                    "short": true
+                  },
+                  {
+                    "title": "Status",
+                    "value": "$(Agent.JobStatus)",
+                    "short": true
+                  },
+                  {
+                    "title": "Environment",
+                    "value": "Production",
+                    "short": true
+                  }
+                ]
+              }
+            ]
+          }
+        headers: |
+          {
+            "Content-Type": "application/json"
+          }
+      displayName: 'Send Slack notification'
+      condition: always()

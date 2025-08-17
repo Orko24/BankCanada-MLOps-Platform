@@ -14,7 +14,7 @@ alembic==1.13.1
 python-jose==3.3.0
 passlib==1.7.4
 bcrypt==4.1.2
-cryptography==41.0.8
+cryptography==41.0.7
 
 # Data processing
 pandas==2.1.4

@@ -213,8 +213,7 @@ async def remove_api_key(
 @router.post("/research")
 async def conduct_research(
     request: Request,
-    data: Dict[str, Any],
-    current_user: User = Depends(get_current_user)
+    data: Dict[str, Any]
 ):
     """Conduct economic research using AI agent"""
     try:
@@ -257,8 +256,7 @@ async def conduct_research(
 @router.post("/chat")
 async def chat_with_agent(
     request: Request,
-    data: Dict[str, str],
-    current_user: User = Depends(get_current_user)
+    data: Dict[str, str]
 ):
     """Chat with the economic research agent"""
     try:

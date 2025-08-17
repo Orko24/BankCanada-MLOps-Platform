@@ -237,17 +237,54 @@ class EconomicResearchService:
             }
     
     async def chat(self, message: str) -> str:
-        """Chat with the economic research agent"""
+        """Chat with the economic research agent using direct API call"""
         try:
-            result = await asyncio.to_thread(
-                self.agent_executor.invoke,
-                {"input": message}
-            )
-            return result["output"]
+            import httpx
+            
+            # Prepare the request
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            data = {
+                "model": "deepseek-chat",
+                "messages": [
+                    {
+                        "role": "system", 
+                        "content": "You are an expert economic research assistant for the Bank of Canada. Provide insightful analysis on Canadian economic indicators, monetary policy, and financial markets. Be precise, data-driven, and professional in your responses."
+                    },
+                    {
+                        "role": "user", 
+                        "content": message
+                    }
+                ],
+                "max_tokens": 4000,
+                "temperature": 0.1,
+                "stream": False
+            }
+            
+            # Make the API call
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                response = await client.post(
+                    "https://api.deepseek.com/v1/chat/completions",
+                    headers=headers,
+                    json=data
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    if result.get('choices') and len(result['choices']) > 0:
+                        return result['choices'][0]['message']['content']
+                    else:
+                        return "No response generated"
+                else:
+                    logger.error(f"DeepSeek API error: {response.status_code} - {response.text}")
+                    return f"I apologize, but I encountered an API error: {response.status_code}"
             
         except Exception as e:
             logger.error(f"Chat error: {e}")
-            return f"I encountered an error while processing your request: {str(e)}"
+            return f"I apologize, but I encountered an error: {str(e)}"
     
     def get_conversation_history(self) -> List:
         """Get conversation history"""

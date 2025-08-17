@@ -32,9 +32,9 @@ from langchain.prompts import ChatPromptTemplate, PromptTemplate
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.schema.output_parser import StrOutputParser
 
-# Use Anthropic Claude as preferred (as per user memory)
-from langchain.chat_models import ChatAnthropic
-from langchain.llms import Anthropic
+# Use DeepSeek as cost-effective alternative
+from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import OpenAI
 
 import pandas as pd
 import numpy as np
@@ -159,7 +159,11 @@ class PolicyAnalysisTool(BaseTool):
         super().__init__()
         self.vector_store = vector_store
         self.qa_chain = RetrievalQA.from_chain_type(
-            llm=ChatAnthropic(model="claude-3-sonnet-20240229", temperature=0.1),
+            llm=ChatOpenAI(
+                model="deepseek-chat",
+                openai_api_base="https://api.deepseek.com/v1",
+                temperature=0.1
+            ),
             chain_type="stuff",
             retriever=vector_store.as_retriever(search_kwargs={"k": 5})
         )
@@ -185,14 +189,15 @@ class EconomicResearchAgent:
     Advanced AI agent for economic research and analysis
     """
     
-    def __init__(self, api_base_url: str, anthropic_api_key: str):
+    def __init__(self, api_base_url: str, deepseek_api_key: str):
         """Initialize the economic research agent"""
         self.api_base_url = api_base_url
         
-        # Initialize LLM (using Claude as preferred)
-        self.llm = ChatAnthropic(
-            model="claude-3-sonnet-20240229",
-            anthropic_api_key=anthropic_api_key,
+        # Initialize LLM (using DeepSeek as cost-effective option)
+        self.llm = ChatOpenAI(
+            model="deepseek-chat",
+            openai_api_key=deepseek_api_key,
+            openai_api_base="https://api.deepseek.com/v1",
             temperature=0.1,
             max_tokens=4000
         )
@@ -517,7 +522,7 @@ async def main():
     # Initialize agent
     agent = EconomicResearchAgent(
         api_base_url="http://localhost:8000",
-        anthropic_api_key=os.getenv("ANTHROPIC_API_KEY")
+        deepseek_api_key=os.getenv("DEEPSEEK_API_KEY")
     )
     
     # Example research queries

@@ -95,8 +95,8 @@ docker-compose exec -T postgres psql -U admin bankcanada_mlops < backup.sql
 
 Create `.env` file with required variables:
 ```bash
-# Required for AI agent
-ANTHROPIC_API_KEY=your_anthropic_key_here
+# Required for AI agent (optional)
+DEEPSEEK_API_KEY=your_deepseek_key_here
 
 # Optional Azure keys for cloud features
 AZURE_CLIENT_ID=your_azure_client_id

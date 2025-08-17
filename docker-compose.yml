@@ -50,7 +50,7 @@ services:
       - DATABASE_URL=postgresql://admin:secure_password@postgres:5432/bankcanada_mlops
       - REDIS_URL=redis://redis:6379
       - MLFLOW_TRACKING_URI=http://mlflow:5000
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
     depends_on:
       - postgres
       - redis

@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     AZURE_CONTAINER_NAME: str = "economic-data"
     
     # API Keys
-    ANTHROPIC_API_KEY: Optional[str] = None
+    DEEPSEEK_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
     
     # Bank of Canada API

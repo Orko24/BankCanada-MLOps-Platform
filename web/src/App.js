@@ -59,6 +59,7 @@ import ForecastingDashboard from './components/ForecastingDashboard';
 import ModelMonitoring from './components/ModelMonitoring';
 import SystemMonitoring from './components/SystemMonitoring';
 import DataQuality from './components/DataQuality';
+import AIAgentDashboard from './components/AIAgentDashboard';
 import Settings from './components/Settings';
 
 // Import services
@@ -181,7 +182,8 @@ const bankCanadaTheme = createTheme({
 const navigationItems = [
   { id: 'dashboard', label: 'Economic Dashboard', icon: DashboardIcon },
   { id: 'forecasting', label: 'ML Forecasting', icon: TrendingUpIcon },
-  { id: 'models', label: 'Model Monitoring', icon: PsychologyIcon },
+  { id: 'ai-agent', label: 'AI Research Assistant', icon: PsychologyIcon },
+  { id: 'models', label: 'Model Monitoring', icon: AssessmentIcon },
   { id: 'system', label: 'System Health', icon: SpeedIcon },
   { id: 'data-quality', label: 'Data Quality', icon: DataUsageIcon },
   { id: 'settings', label: 'Settings', icon: SettingsIcon }
@@ -251,6 +253,8 @@ function App() {
         return <EconomicDashboard />;
       case 'forecasting':
         return <ForecastingDashboard />;
+      case 'ai-agent':
+        return <AIAgentDashboard />;
       case 'models':
         return <ModelMonitoring />;
       case 'system':

@@ -32,11 +32,11 @@ spec:
           value: "redis://redis-service:6379"
         - name: MLFLOW_TRACKING_URI
           value: "http://mlflow-service:5000"
-        - name: ANTHROPIC_API_KEY
+        - name: DEEPSEEK_API_KEY
           valueFrom:
             secretKeyRef:
               name: api-secrets
-              key: anthropic-key
+              key: deepseek-key
         resources:
           requests:
             memory: "256Mi"
@@ -75,4 +75,4 @@ metadata:
   namespace: mlops-production
 type: Opaque
 data:
-  anthropic-key: eW91cl9hbnRocm9waWNfYXBpX2tleV9oZXJl  # base64 encoded placeholder
+  deepseek-key: eW91cl9kZWVwc2Vla19hcGlfa2V5X2hlcmU=  # base64 encoded placeholder

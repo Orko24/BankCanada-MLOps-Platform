@@ -50,31 +50,44 @@ class AIAgentService:
     
     @staticmethod
     async def test_deepseek_api_key(api_key: str) -> Dict[str, Any]:
-        """Test DeepSeek API key validity"""
+        """Test DeepSeek API key validity using direct HTTP request"""
         try:
-            from langchain_community.chat_models import ChatOpenAI
+            import httpx
             
-            # Create a test LLM instance
-            llm = ChatOpenAI(
-                model="deepseek-chat",
-                openai_api_key=api_key,
-                openai_api_base="https://api.deepseek.com/v1",
-                temperature=0.1,
-                max_tokens=10
-            )
-            
-            # Test with a simple query
-            response = await asyncio.to_thread(
-                llm.invoke, 
-                "Hello"
-            )
-            
-            return {
-                'valid': True,
-                'provider': 'DeepSeek',
-                'model': 'deepseek-chat',
-                'test_response': str(response.content)[:50]
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
             }
+            
+            data = {
+                "model": "deepseek-chat",
+                "messages": [{"role": "user", "content": "Hello"}],
+                "max_tokens": 10,
+                "temperature": 0.1
+            }
+            
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    "https://api.deepseek.com/v1/chat/completions",
+                    headers=headers,
+                    json=data
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    return {
+                        'valid': True,
+                        'provider': 'DeepSeek',
+                        'model': 'deepseek-chat',
+                        'test_response': result.get('choices', [{}])[0].get('message', {}).get('content', 'Test successful')[:50]
+                    }
+                else:
+                    logger.error(f"DeepSeek API returned {response.status_code}: {response.text}")
+                    return {
+                        'valid': False,
+                        'error': f"API returned status {response.status_code}: {response.text[:100]}",
+                        'provider': 'DeepSeek'
+                    }
             
         except Exception as e:
             logger.error(f"DeepSeek API key test failed: {e}")
@@ -101,8 +114,7 @@ def get_session_id(request: Request) -> str:
 @router.post("/api-key/set")
 async def set_api_key(
     request: Request,
-    data: Dict[str, str],
-    current_user: User = Depends(get_current_user)
+    data: Dict[str, str]
 ):
     """Set API key for the current session"""
     try:
@@ -127,8 +139,7 @@ async def set_api_key(
 @router.post("/api-key/test")
 async def test_api_key(
     request: Request,
-    data: Dict[str, str],
-    current_user: User = Depends(get_current_user)
+    data: Dict[str, str]
 ):
     """Test API key validity"""
     try:
@@ -151,8 +162,7 @@ async def test_api_key(
 
 @router.get("/api-key/status")
 async def get_api_key_status(
-    request: Request,
-    current_user: User = Depends(get_current_user)
+    request: Request
 ):
     """Get API key status for current session"""
     try:
@@ -183,8 +193,7 @@ async def get_api_key_status(
 
 @router.delete("/api-key")
 async def remove_api_key(
-    request: Request,
-    current_user: User = Depends(get_current_user)
+    request: Request
 ):
     """Remove API key from current session"""
     try:

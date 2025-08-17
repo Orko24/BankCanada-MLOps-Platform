@@ -32,6 +32,7 @@ from utils.logging_config import setup_logging
 from services.economic_data_service import EconomicDataService
 from services.model_service import ModelService
 from services.hybrid_database import HybridDatabaseService
+from services.mlflow_service import mlflow_service
 from middleware.security import SecurityMiddleware
 
 
@@ -51,6 +52,11 @@ async def lifespan(app: FastAPI):
     # Initialize database
     await init_db()
     
+    # Setup MLflow environment
+    from config import MLflowConfig
+    mlflow_config = MLflowConfig.setup_environment()
+    logger.info(f"MLflow initialized in {mlflow_config['mode']} mode: {mlflow_config['tracking_uri']}")
+    
     # Initialize services
     hybrid_db = HybridDatabaseService()
     await hybrid_db.initialize()
@@ -59,6 +65,9 @@ async def lifespan(app: FastAPI):
     await economic_service.initialize()
     
     model_service = ModelService()
+    
+    # Initialize MLflow service
+    await mlflow_service.initialize()
     
     # Start background tasks
     asyncio.create_task(economic_service.start_data_ingestion())

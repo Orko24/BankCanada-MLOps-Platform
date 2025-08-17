@@ -26,11 +26,28 @@ class HybridDatabaseService:
     async def initialize(self):
         """Initialize both database connections"""
         try:
-            self.databricks_available = await self.databricks.connect()
+            # Check if Databricks is configured
+            from config import DatabricksConfig
+            
+            if DatabricksConfig.is_configured():
+                self.logger.info("Databricks configuration detected, attempting connection...")
+                self.databricks_available = await self.databricks.connect()
+                if self.databricks_available:
+                    self.logger.info("✅ Databricks connected successfully - Using hybrid mode")
+                else:
+                    self.logger.warning("⚠️ Databricks connection failed - Falling back to PostgreSQL only")
+            else:
+                self.logger.info("🔧 No Databricks configuration found - Using PostgreSQL only mode")
+                self.databricks_available = False
+            
             await self.credit_monitor.check_credit_usage()
-            self.logger.info(f"Hybrid database initialized - Databricks: {self.databricks_available}")
+            
+            mode = "Hybrid (Databricks + PostgreSQL)" if self.databricks_available else "PostgreSQL Only"
+            self.logger.info(f"Database initialized in {mode} mode")
+            
         except Exception as e:
             self.logger.error(f"Failed to initialize hybrid database: {e}")
+            self.logger.info("Falling back to PostgreSQL only mode")
             self.databricks_available = False
     
     async def execute_query(self, query: str, prefer_databricks: bool = True) -> Optional[pd.DataFrame]:

@@ -137,7 +137,7 @@ class UserSession(Base):
     # Indexes
     __table_args__ = (
         Index('idx_user_active', 'user_id', 'is_active'),
-        Index('idx_expires_at', 'expires_at'),
+        Index('idx_session_expires_at', 'expires_at'),
     )
     
     def __repr__(self):
@@ -182,7 +182,7 @@ class APIKey(Base):
     # Indexes
     __table_args__ = (
         Index('idx_user_active_keys', 'user_id', 'is_active'),
-        Index('idx_expires_at', 'expires_at'),
+        Index('idx_api_key_expires_at', 'expires_at'),
     )
     
     def __repr__(self):

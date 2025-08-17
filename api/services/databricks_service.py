@@ -23,8 +23,12 @@ class DatabricksService:
     async def connect(self):
         """Establish connection to Databricks"""
         try:
-            if not self.token:
-                self.logger.warning("No Databricks token provided - using fallback mode")
+            if not self.token or self.token == "your_databricks_token_here":
+                self.logger.info("🔧 No Databricks token configured - skipping Databricks connection")
+                return False
+            
+            if not self.host or not self.warehouse_id:
+                self.logger.warning("⚠️ Incomplete Databricks configuration - missing host or warehouse ID")
                 return False
             
             # Import here to avoid issues if databricks packages not installed

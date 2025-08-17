@@ -8,8 +8,10 @@ import logging
 
 from services.hybrid_database import HybridDatabaseService
 from services.credit_monitor import CreditMonitorService
+from services.mlflow_service import mlflow_service
 from utils.auth import get_current_user
 from models.user_models import User
+from config import DatabricksConfig, MLflowConfig
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -170,6 +172,64 @@ async def list_tables(
         logger.error(f"Failed to list tables: {e}")
         raise HTTPException(status_code=500, detail="Failed to list tables")
 
+@router.get("/mlflow/status")
+async def get_mlflow_status(
+    current_user: User = Depends(get_current_user)
+):
+    """Get MLflow configuration and status"""
+    try:
+        mlflow_info = await mlflow_service.get_experiment_info()
+        
+        return {
+            "status": "success",
+            "mlflow": mlflow_info,
+            "databricks_available": DatabricksConfig.is_configured(),
+            "mode": MLflowConfig.get_mode()
+        }
+    except Exception as e:
+        logger.error(f"Failed to get MLflow status: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve MLflow status")
+
+@router.get("/system/overview")
+async def get_system_overview(
+    current_user: User = Depends(get_current_user)
+):
+    """Get complete system overview including database and MLflow status"""
+    try:
+        # Get database status
+        db_status = await hybrid_db.get_status()
+        
+        # Get MLflow status
+        mlflow_info = await mlflow_service.get_experiment_info()
+        
+        # Determine system mode
+        has_databricks = DatabricksConfig.is_configured()
+        db_mode = "hybrid" if has_databricks and db_status["databricks"]["available"] else "postgresql_only"
+        
+        return {
+            "status": "success",
+            "system_mode": db_mode,
+            "capabilities": {
+                "databricks_sql": has_databricks and db_status["databricks"]["available"],
+                "postgresql": db_status["postgresql"]["available"],
+                "mlflow_databricks": mlflow_info.get("mode") == "databricks",
+                "mlflow_local": mlflow_info.get("mode") == "local",
+                "credit_monitoring": has_databricks
+            },
+            "database": db_status,
+            "mlflow": mlflow_info,
+            "recommendations": db_status.get("recommendations", []),
+            "configuration": {
+                "databricks_configured": has_databricks,
+                "credit_threshold": DatabricksConfig.get_credit_threshold() if has_databricks else None,
+                "mlflow_mode": MLflowConfig.get_mode(),
+                "tracking_uri": mlflow_info.get("tracking_uri")
+            }
+        }
+    except Exception as e:
+        logger.error(f"Failed to get system overview: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve system overview")
+
 @router.post("/initialize")
 async def initialize_databricks(
     current_user: User = Depends(get_current_user)
@@ -177,13 +237,17 @@ async def initialize_databricks(
     """Initialize Databricks connection and setup"""
     try:
         await hybrid_db.initialize()
+        await mlflow_service.initialize()
+        
         status = await hybrid_db.get_status()
+        mlflow_info = await mlflow_service.get_experiment_info()
         
         return {
             "status": "success",
-            "message": "Databricks initialized successfully",
-            "connection_status": status
+            "message": "System initialized successfully",
+            "database": status,
+            "mlflow": mlflow_info
         }
     except Exception as e:
-        logger.error(f"Failed to initialize Databricks: {e}")
-        raise HTTPException(status_code=500, detail="Failed to initialize Databricks")
+        logger.error(f"Failed to initialize system: {e}")
+        raise HTTPException(status_code=500, detail="Failed to initialize system")

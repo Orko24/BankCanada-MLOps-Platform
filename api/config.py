@@ -155,10 +155,13 @@ class DatabricksConfig:
     
     @staticmethod
     def is_configured() -> bool:
+        """Check if Databricks is properly configured with valid credentials"""
         return all([
             settings.DATABRICKS_HOST,
             settings.DATABRICKS_TOKEN,
-            settings.DATABRICKS_SQL_WAREHOUSE_ID
+            settings.DATABRICKS_SQL_WAREHOUSE_ID,
+            settings.DATABRICKS_TOKEN != "your_databricks_token_here",  # Not placeholder
+            settings.DATABRICKS_TOKEN != "",  # Not empty
         ])
     
     @staticmethod
@@ -171,18 +174,48 @@ class MLflowConfig:
     
     @staticmethod
     def get_tracking_uri() -> str:
-        # Use Databricks if configured, otherwise fallback to local
+        """Get MLflow tracking URI based on available configuration"""
         if DatabricksConfig.is_configured():
             return "databricks"
-        return "http://localhost:5000"
+        else:
+            # Use local MLflow server or file-based tracking
+            return settings.MLFLOW_TRACKING_URI if settings.MLFLOW_TRACKING_URI != "databricks" else "file:./mlruns"
     
     @staticmethod
     def get_artifact_root() -> str:
-        return settings.MLFLOW_DEFAULT_ARTIFACT_ROOT
+        """Get artifact storage location"""
+        if DatabricksConfig.is_configured():
+            return "dbfs:/databricks/mlflow-tracking"  # Databricks managed location
+        else:
+            return settings.MLFLOW_DEFAULT_ARTIFACT_ROOT
     
     @staticmethod
     def get_experiment_name(model_type: str) -> str:
-        return f"bankcanada_{model_type}_models"
+        """Generate experiment name with environment prefix"""
+        env_prefix = "local" if not DatabricksConfig.is_configured() else "databricks"
+        return f"{env_prefix}_bankcanada_{model_type}_models"
+    
+    @staticmethod
+    def get_mode() -> str:
+        """Get current MLflow mode"""
+        return "databricks" if DatabricksConfig.is_configured() else "local"
+    
+    @staticmethod
+    def setup_environment():
+        """Setup MLflow environment variables"""
+        import os
+        tracking_uri = MLflowConfig.get_tracking_uri()
+        os.environ["MLFLOW_TRACKING_URI"] = tracking_uri
+        
+        if DatabricksConfig.is_configured():
+            os.environ["DATABRICKS_HOST"] = settings.DATABRICKS_HOST
+            os.environ["DATABRICKS_TOKEN"] = settings.DATABRICKS_TOKEN
+        
+        return {
+            "tracking_uri": tracking_uri,
+            "mode": MLflowConfig.get_mode(),
+            "artifact_root": MLflowConfig.get_artifact_root()
+        }
 
 
 class SecurityConfig:

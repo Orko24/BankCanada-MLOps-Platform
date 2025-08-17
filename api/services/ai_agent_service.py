@@ -15,11 +15,16 @@ logger = logging.getLogger(__name__)
 class EconomicResearchService:
     """Economic research service with dynamic API key support"""
     
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, enable_agent: bool = False):
         """Initialize with user-provided API key"""
         self.api_key = api_key
         self.agent = None
-        self._initialize_agent()
+        self.agent_executor = None
+        self.memory = None
+        self.llm = None
+        
+        if enable_agent:
+            self._initialize_agent()
     
     def _initialize_agent(self):
         """Initialize the AI agent with the provided API key"""
@@ -88,7 +93,7 @@ class EconomicResearchService:
                 prompt=prompt
             )
             
-            self.agent_executor = AgentExecutor.from_agent_and_tools(
+            self.agent_executor = AgentExecutor(
                 agent=self.agent,
                 tools=tools,
                 memory=self.memory,
@@ -101,7 +106,9 @@ class EconomicResearchService:
             
         except Exception as e:
             logger.error(f"Failed to initialize AI agent: {e}")
-            raise
+            # Don't raise - allow service to work for chat without agent
+            self.agent = None
+            self.agent_executor = None
     
     def _create_tools(self) -> List:
         """Create tools for the AI agent"""

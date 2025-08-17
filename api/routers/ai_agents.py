@@ -12,6 +12,7 @@ from datetime import datetime
 from database import get_db
 from utils.auth import get_current_user
 from models.user_models import User
+from services.ai_agent_service import EconomicResearchService
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -231,7 +232,7 @@ async def conduct_research(
             raise HTTPException(status_code=400, detail="Research question is required")
         
         # Initialize agent with session API key
-        from ..services.ai_agent_service import EconomicResearchService
+
         research_service = EconomicResearchService(api_key=api_key)
         
         # Conduct research
@@ -274,7 +275,7 @@ async def chat_with_agent(
             raise HTTPException(status_code=400, detail="Message is required")
         
         # Initialize agent with session API key
-        from ..services.ai_agent_service import EconomicResearchService
+
         research_service = EconomicResearchService(api_key=api_key)
         
         # Get chat response

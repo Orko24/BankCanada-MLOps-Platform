@@ -23,7 +23,7 @@ RUN mkdir -p /app/artifacts
 EXPOSE 5000
 
 # Set environment variables
-ENV MLFLOW_BACKEND_STORE_URI=postgresql://admin:secure_password@postgres:5432/bankcanada_mlops
+ENV MLFLOW_BACKEND_STORE_URI=postgresql://admin:pass@postgres:5432/bankcanada_mlops
 ENV MLFLOW_DEFAULT_ARTIFACT_ROOT=/app/artifacts
 ENV MLFLOW_HOST=0.0.0.0
 ENV MLFLOW_PORT=5000

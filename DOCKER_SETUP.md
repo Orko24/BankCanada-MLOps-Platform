@@ -8,13 +8,33 @@
 - 10GB free disk space
 
 ### One-Command Setup
+
+**Option 1: Automated Script (Recommended)**
+```bash
+# Clone repository
+git clone <repository>
+cd BankofCanada_project
+
+# Linux/Mac users:
+chmod +x start_local.sh
+./start_local.sh
+
+# Windows users:
+start_local.bat
+```
+
+**Option 2: Manual Setup**
 ```bash
 # Clone repository and start everything
 git clone <repository>
 cd BankofCanada_project
 
-# Copy environment template
+# Copy environment template and configure PostgreSQL password
 cp env.example .env
+# Default PostgreSQL password is 'pass' (you can change this in .env if needed)
+
+# Build all Docker images first
+docker-compose build
 
 # Start all services
 docker-compose up -d
@@ -27,7 +47,7 @@ docker-compose logs -f
 - **Economic Dashboard**: http://localhost:3000
 - **API Documentation**: http://localhost:8000/docs
 - **MLflow Tracking**: http://localhost:5000
-- **Database**: localhost:5432 (user: admin, password: secure_password)
+- **Database**: localhost:5432 (user: admin, password: pass)
 - **Redis Cache**: localhost:6379
 - **Grafana Monitoring**: http://localhost:3001 (admin/admin)
 
@@ -104,7 +124,7 @@ AZURE_CLIENT_SECRET=your_azure_client_secret
 AZURE_TENANT_ID=your_azure_tenant_id
 
 # Database (automatically configured in docker-compose)
-DATABASE_URL=postgresql://admin:secure_password@postgres:5432/bankcanada_mlops
+DATABASE_URL=postgresql://admin:pass@postgres:5432/bankcanada_mlops
 REDIS_URL=redis://redis:6379
 MLFLOW_TRACKING_URI=http://mlflow:5000
 ```

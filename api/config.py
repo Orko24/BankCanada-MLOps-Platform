@@ -17,12 +17,12 @@ class Settings(BaseSettings):
     TESTING: bool = False
     
     # Database
-    DATABASE_URL: str = "postgresql://admin:secure_password@localhost:5432/bankcanada_mlops"
+    DATABASE_URL: str = "postgresql://admin:pass@localhost:5432/bankcanada_mlops"
     REDIS_URL: str = "redis://localhost:6379"
     
     # MLflow
     MLFLOW_TRACKING_URI: str = "http://localhost:5000"
-    MLFLOW_BACKEND_STORE_URI: str = "postgresql://admin:secure_password@localhost:5432/bankcanada_mlops"
+    MLFLOW_BACKEND_STORE_URI: str = "postgresql://admin:pass@localhost:5432/bankcanada_mlops"
     MLFLOW_DEFAULT_ARTIFACT_ROOT: str = "./artifacts"
     
     # Azure Configuration

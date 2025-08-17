@@ -111,6 +111,10 @@ app.include_router(monitoring.router, prefix="/api/monitoring", tags=["monitorin
 app.include_router(ai_agents.router, prefix="/api/ai-agents", tags=["ai-agents"])
 app.include_router(databricks.router, prefix="/api/databricks", tags=["databricks"])
 
+# Import and include databricks config router
+from routers import databricks_config
+app.include_router(databricks_config.router, prefix="/api/databricks-config", tags=["databricks-config"])
+
 
 @app.get("/")
 async def root():

@@ -257,6 +257,43 @@ class ApiService {
     }
     return error.message || 'An unexpected error occurred.';
   }
+
+  // Databricks Configuration endpoints
+  async setDatabricksConfig(config) {
+    try {
+      const response = await this.api.post('/api/databricks-config/set', config);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Failed to set Databricks configuration');
+    }
+  }
+
+  async testDatabricksConfig(config) {
+    try {
+      const response = await this.api.post('/api/databricks-config/test', config);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Failed to test Databricks configuration');
+    }
+  }
+
+  async getDatabricksConfigStatus() {
+    try {
+      const response = await this.api.get('/api/databricks-config/status');
+      return response.data;
+    } catch (error) {
+      return { has_config: false };
+    }
+  }
+
+  async removeDatabricksConfig() {
+    try {
+      const response = await this.api.delete('/api/databricks-config/');
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.detail || 'Failed to remove Databricks configuration');
+    }
+  }
 }
 
 // Create and export singleton instance

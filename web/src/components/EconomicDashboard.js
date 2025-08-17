@@ -42,7 +42,8 @@ import {
   Work,
   Home,
   AttachMoney,
-  Speed
+  Speed,
+  Settings
 } from '@mui/icons-material';
 import {
   LineChart,
@@ -66,6 +67,7 @@ import numeral from 'numeral';
 
 import { apiService } from '../services/apiService';
 import { useNotifications } from '../hooks/useNotifications';
+import DatabricksConfigModal from './DatabricksConfigModal';
 
 // Key economic indicators configuration
 const ECONOMIC_INDICATORS = [
@@ -130,6 +132,7 @@ const EconomicDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(null);
+  const [databricksConfigOpen, setDatabricksConfigOpen] = useState(false);
 
   const { showNotification } = useNotifications();
 
@@ -479,6 +482,15 @@ const EconomicDashboard = () => {
         </Box>
         
         <Stack direction="row" spacing={2}>
+          <Tooltip title="Configure Databricks">
+            <IconButton 
+              onClick={() => setDatabricksConfigOpen(true)}
+              color="primary"
+            >
+              <Settings />
+            </IconButton>
+          </Tooltip>
+          
           <Tooltip title="Refresh Data">
             <IconButton 
               onClick={() => loadEconomicData(true)}
@@ -492,6 +504,7 @@ const EconomicDashboard = () => {
           <Button variant="outlined" startIcon={<Download />}>
             Export Data
           </Button>
+          
           
           {lastUpdate && (
             <Chip
@@ -522,6 +535,18 @@ const EconomicDashboard = () => {
           {renderCorrelationMatrix()}
         </Grid>
       </Grid>
+      
+      {/* Databricks Configuration Modal */}
+      <DatabricksConfigModal
+        open={databricksConfigOpen}
+        onClose={() => setDatabricksConfigOpen(false)}
+        onConfigured={() => {
+          setDatabricksConfigOpen(false);
+          showNotification('Databricks configured successfully!', 'success');
+          // Optionally refresh data
+          loadEconomicData(true);
+        }}
+      />
     </Box>
   );
 };

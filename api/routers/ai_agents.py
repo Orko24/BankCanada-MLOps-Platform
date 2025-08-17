@@ -17,9 +17,10 @@ from services.ai_agent_service import EconomicResearchService
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-# In-memory storage for API keys per session
+# In-memory storage for API keys and Databricks configs per session
 # In production, you'd use Redis or encrypted session storage
 session_api_keys = {}
+session_databricks_configs = {}
 
 class AIAgentService:
     """Service for managing AI agents with dynamic API keys"""
@@ -48,6 +49,31 @@ class AIAgentService:
     def has_api_key(session_id: str) -> bool:
         """Check if session has API key"""
         return session_id in session_api_keys
+    
+    @staticmethod
+    def store_databricks_config(session_id: str, host: str, token: str, workspace_id: str = None):
+        """Store Databricks configuration for session"""
+        session_databricks_configs[session_id] = {
+            'host': host,
+            'token': token,
+            'workspace_id': workspace_id,
+            'stored_at': datetime.utcnow()
+        }
+    
+    @staticmethod
+    def get_databricks_config(session_id: str) -> Optional[Dict[str, str]]:
+        """Get Databricks configuration for session"""
+        return session_databricks_configs.get(session_id)
+    
+    @staticmethod
+    def remove_databricks_config(session_id: str):
+        """Remove Databricks configuration for session"""
+        session_databricks_configs.pop(session_id, None)
+    
+    @staticmethod
+    def has_databricks_config(session_id: str) -> bool:
+        """Check if session has Databricks configuration"""
+        return session_id in session_databricks_configs
     
     @staticmethod
     async def test_deepseek_api_key(api_key: str) -> Dict[str, Any]:

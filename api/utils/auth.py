@@ -39,3 +39,27 @@ async def get_current_active_user(
             detail="Inactive user"
         )
     return current_user
+
+async def get_optional_user(
+    db: AsyncSession = Depends(get_db)
+) -> User:
+    """Get current user, but don't require authentication for demo purposes"""
+    try:
+        # For demo purposes, return mock user without requiring valid token
+        mock_user = User(
+            id=1,
+            username="demo_user",
+            email="demo@bankofcanada.ca",
+            is_active=True,
+            is_verified=True
+        )
+        return mock_user
+    except Exception:
+        # Fallback mock user if anything fails
+        return User(
+            id=1,
+            username="demo_user",
+            email="demo@bankofcanada.ca",
+            is_active=True,
+            is_verified=True
+        )

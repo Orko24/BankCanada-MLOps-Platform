@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import uuid
 
-from ..database import Base
+from database import Base
 
 
 class MLExperiment(Base):
@@ -302,7 +302,7 @@ class ModelPerformanceMetric(Base):
     
     # Additional context
     tags = Column(JSON)
-    metadata = Column(JSON)
+    deployment_metadata = Column(JSON)
     
     # Indexes
     __table_args__ = (

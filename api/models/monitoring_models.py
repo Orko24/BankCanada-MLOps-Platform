@@ -8,7 +8,7 @@ from sqlalchemy.sql import func
 from datetime import datetime
 from typing import Optional, Dict, Any
 
-from ..database import Base
+from database import Base
 
 
 class SystemMetric(Base):
@@ -32,7 +32,7 @@ class SystemMetric(Base):
     
     # Labels and metadata
     labels = Column(JSON)      # Key-value pairs for metric dimensions
-    metadata = Column(JSON)    # Additional metric context
+    metric_metadata = Column(JSON)    # Additional metric context
     
     # Quality indicators
     quality = Column(String(20), default="good")  # good, degraded, poor
@@ -195,7 +195,7 @@ class ModelDriftAlert(Base):
     # Additional context
     feature_drift_details = Column(JSON)  # Per-feature drift scores
     recommendations = Column(JSON)        # Suggested actions
-    metadata = Column(JSON)
+    alert_metadata = Column(JSON)
     
     def __repr__(self):
         return f"<ModelDriftAlert(model_id={self.model_id}, drift_type='{self.drift_type}', score={self.drift_score})>"
@@ -372,7 +372,7 @@ class SLAPerformance(Base):
     # Metadata
     calculation_method = Column(String(100))
     exclusions = Column(JSON)  # Maintenance windows, etc.
-    metadata = Column(JSON)
+    sla_metadata = Column(JSON)
     
     # Relationships
     sla_definition = relationship("SLADefinition", back_populates="performance_records")

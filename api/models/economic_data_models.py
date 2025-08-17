@@ -9,7 +9,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import uuid
 
-from ..database import Base
+from database import Base
 
 
 class EconomicIndicator(Base):
@@ -66,7 +66,7 @@ class EconomicDataPoint(Base):
     ingestion_timestamp = Column(DateTime(timezone=True), server_default=func.now())
     
     # Additional metadata
-    metadata = Column(JSON)  # Flexible metadata storage
+    data_metadata = Column(JSON)  # Flexible metadata storage
     
     # Relationships
     indicator = relationship("EconomicIndicator", back_populates="data_points")

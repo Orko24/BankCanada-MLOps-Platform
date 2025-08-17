@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta
 import logging
 
-from ..database import get_db
-from ..schemas.auth_schemas import (
+from database import get_db
+from schemas.auth_schemas import (
     UserCreate,
     UserResponse,
     Token,
@@ -17,9 +17,9 @@ from ..schemas.auth_schemas import (
     PasswordChange,
     UserUpdate
 )
-from ..services.auth_service import AuthService
-from ..utils.auth import get_current_user, get_current_active_user
-from ..models.user_models import User
+from services.auth_service import AuthService
+from utils.auth import get_current_user, get_current_active_user
+from models.user_models import User
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

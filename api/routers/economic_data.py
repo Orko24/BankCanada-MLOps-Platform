@@ -9,17 +9,17 @@ from datetime import datetime, timedelta
 import pandas as pd
 import logging
 
-from ..database import get_db
-from ..models.economic_data_models import EconomicIndicator, EconomicDataPoint, EconomicForecast
-from ..schemas.economic_schemas import (
+from database import get_db
+from models.economic_data_models import EconomicIndicator, EconomicDataPoint, EconomicForecast
+from schemas.economic_schemas import (
     EconomicIndicatorResponse,
     EconomicDataPointResponse,
     EconomicDataRequest,
     TimeSeriesResponse,
     ForecastResponse
 )
-from ..services.economic_data_service import EconomicDataService
-from ..utils.auth import get_current_user
+from services.economic_data_service import EconomicDataService
+from utils.auth import get_current_user
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

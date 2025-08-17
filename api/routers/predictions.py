@@ -9,8 +9,8 @@ from datetime import datetime, timedelta
 import logging
 import json
 
-from ..database import get_db
-from ..schemas.prediction_schemas import (
+from database import get_db
+from schemas.prediction_schemas import (
     PredictionRequest,
     PredictionResponse,
     BatchPredictionRequest,
@@ -19,9 +19,9 @@ from ..schemas.prediction_schemas import (
     ForecastResponse,
     ModelPredictionConfig
 )
-from ..services.prediction_service import PredictionService
-from ..services.model_service import ModelService
-from ..utils.auth import get_current_user
+from services.prediction_service import PredictionService
+from services.model_service import ModelService
+from utils.auth import get_current_user
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

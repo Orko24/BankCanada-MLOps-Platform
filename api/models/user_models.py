@@ -8,7 +8,7 @@ from sqlalchemy.sql import func
 from datetime import datetime
 from typing import Optional, Dict, Any
 
-from ..database import Base
+from database import Base
 
 
 class Role(Base):
@@ -226,7 +226,7 @@ class UserAuditLog(Base):
     is_suspicious = Column(Boolean, default=False)
     
     # Additional context
-    metadata = Column(JSON)
+    session_metadata = Column(JSON)
     tags = Column(JSON)
     
     # Relationships

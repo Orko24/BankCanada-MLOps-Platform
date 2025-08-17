@@ -11,7 +11,7 @@ from typing import AsyncGenerator
 import redis
 import asyncio
 
-from .config import settings, DatabaseConfig
+from config import settings, DatabaseConfig
 
 logger = logging.getLogger(__name__)
 

@@ -17,7 +17,7 @@ import os
 from typing import List, Dict, Any, Optional
 import asyncio
 
-from .routers import (
+from routers import (
     economic_data, 
     predictions, 
     models, 
@@ -25,12 +25,12 @@ from .routers import (
     ai_agents,
     auth
 )
-from .database import init_db, get_db
-from .config import settings
-from .utils.logging_config import setup_logging
-from .services.economic_data_service import EconomicDataService
-from .services.model_service import ModelService
-from .middleware.security import SecurityMiddleware
+from database import init_db, get_db
+from config import settings
+from utils.logging_config import setup_logging
+from services.economic_data_service import EconomicDataService
+from services.model_service import ModelService
+from middleware.security import SecurityMiddleware
 
 
 # Setup logging

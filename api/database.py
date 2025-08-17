@@ -56,7 +56,7 @@ async def init_db():
     """Initialize the database with all tables"""
     try:
         # Import all models to register them
-        from .models import (
+        from models import (
             economic_data_models,
             ml_models,
             user_models,
@@ -81,8 +81,8 @@ async def create_default_data():
     """Create default data for the application"""
     try:
         async with AsyncSessionLocal() as session:
-            from .models.user_models import User, Role
-            from .services.auth_service import AuthService
+            from models.user_models import User, Role
+            from services.auth_service import AuthService
             
             # Create default roles
             roles_data = [

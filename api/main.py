@@ -23,13 +23,15 @@ from routers import (
     models, 
     monitoring, 
     ai_agents,
-    auth
+    auth,
+    databricks
 )
 from database import init_db, get_db
 from config import settings
 from utils.logging_config import setup_logging
 from services.economic_data_service import EconomicDataService
 from services.model_service import ModelService
+from services.hybrid_database import HybridDatabaseService
 from middleware.security import SecurityMiddleware
 
 
@@ -50,7 +52,12 @@ async def lifespan(app: FastAPI):
     await init_db()
     
     # Initialize services
+    hybrid_db = HybridDatabaseService()
+    await hybrid_db.initialize()
+    
     economic_service = EconomicDataService()
+    await economic_service.initialize()
+    
     model_service = ModelService()
     
     # Start background tasks
@@ -93,6 +100,7 @@ app.include_router(predictions.router, prefix="/api/predictions", tags=["predict
 app.include_router(models.router, prefix="/api/models", tags=["models"])
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["monitoring"])
 app.include_router(ai_agents.router, prefix="/api/ai-agents", tags=["ai-agents"])
+app.include_router(databricks.router, prefix="/api/databricks", tags=["databricks"])
 
 
 @app.get("/")
@@ -109,7 +117,8 @@ async def root():
             "predictions": "/api/predictions",
             "models": "/api/models",
             "monitoring": "/api/monitoring",
-            "ai_agents": "/api/ai-agents"
+            "ai_agents": "/api/ai-agents",
+            "databricks": "/api/databricks"
         }
     }
 

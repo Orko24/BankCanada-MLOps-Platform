@@ -20,8 +20,16 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql://admin:pass@localhost:5432/bankcanada_mlops"
     REDIS_URL: str = "redis://localhost:6379"
     
-    # MLflow
-    MLFLOW_TRACKING_URI: str = "http://localhost:5000"
+    # Databricks Configuration
+    DATABRICKS_HOST: Optional[str] = None
+    DATABRICKS_TOKEN: Optional[str] = None  
+    DATABRICKS_SQL_WAREHOUSE_ID: Optional[str] = None
+    DATABRICKS_CREDIT_THRESHOLD: float = 80.0
+    DATABRICKS_WORKSPACE_URL: Optional[str] = None
+    
+    # MLflow - Updated for Databricks integration
+    MLFLOW_TRACKING_URI: str = "databricks"  # Changed from local to databricks
+    MLFLOW_EXPERIMENT_ID: Optional[str] = None
     MLFLOW_BACKEND_STORE_URI: str = "postgresql://admin:pass@localhost:5432/bankcanada_mlops"
     MLFLOW_DEFAULT_ARTIFACT_ROOT: str = "./artifacts"
     
@@ -130,12 +138,43 @@ class DatabaseConfig:
         }
 
 
+class DatabricksConfig:
+    """Databricks-specific configuration"""
+    
+    @staticmethod
+    def get_connection_params() -> dict:
+        return {
+            "server_hostname": settings.DATABRICKS_HOST,
+            "http_path": f"/sql/1.0/warehouses/{settings.DATABRICKS_SQL_WAREHOUSE_ID}",
+            "access_token": settings.DATABRICKS_TOKEN
+        }
+    
+    @staticmethod
+    def get_workspace_url() -> str:
+        return f"https://{settings.DATABRICKS_HOST}" if settings.DATABRICKS_HOST else ""
+    
+    @staticmethod
+    def is_configured() -> bool:
+        return all([
+            settings.DATABRICKS_HOST,
+            settings.DATABRICKS_TOKEN,
+            settings.DATABRICKS_SQL_WAREHOUSE_ID
+        ])
+    
+    @staticmethod
+    def get_credit_threshold() -> float:
+        return settings.DATABRICKS_CREDIT_THRESHOLD
+
+
 class MLflowConfig:
     """MLflow-specific configuration"""
     
     @staticmethod
     def get_tracking_uri() -> str:
-        return settings.MLFLOW_TRACKING_URI
+        # Use Databricks if configured, otherwise fallback to local
+        if DatabricksConfig.is_configured():
+            return "databricks"
+        return "http://localhost:5000"
     
     @staticmethod
     def get_artifact_root() -> str:

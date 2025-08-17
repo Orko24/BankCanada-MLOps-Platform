@@ -117,18 +117,21 @@ class EconomicDataService:
     async def _fetch_from_bank_canada(self, indicator_code: str) -> List[Dict[str, Any]]:
         """Fetch data from Bank of Canada API"""
         try:
+            # First, get or create the indicator record to get the indicator_id
+            indicator_id = await self._get_or_create_indicator(indicator_code)
+            
             # Mock data for now - replace with actual API call
             # In production: use httpx to call Bank of Canada Valet API
             mock_data = [
                 {
                     "date": "2024-01-01",
                     "value": 3.25,
-                    "indicator_code": indicator_code
+                    "indicator_id": indicator_id
                 },
                 {
                     "date": "2024-01-02", 
                     "value": 3.30,
-                    "indicator_code": indicator_code
+                    "indicator_id": indicator_id
                 }
             ]
             
@@ -137,6 +140,66 @@ class EconomicDataService:
         except Exception as e:
             self.logger.error(f"Failed to fetch data from Bank of Canada API: {e}")
             return []
+    
+    async def _get_or_create_indicator(self, indicator_code: str) -> int:
+        """Get or create indicator record and return its ID"""
+        try:
+            # Use direct SQLAlchemy session to ensure proper transaction handling
+            from database import get_db
+            from sqlalchemy import text
+            
+            async for db in get_db():
+                # First try to find existing indicator
+                select_query = text("SELECT id FROM economic_indicators WHERE code = :code LIMIT 1")
+                result = await db.execute(select_query, {"code": indicator_code})
+                row = result.fetchone()
+                
+                if row:
+                    return int(row.id)
+                
+                # Create new indicator if not exists
+                indicator_names = {
+                    'inflation_rate': 'Consumer Price Index Annual Inflation Rate',
+                    'unemployment_rate': 'Unemployment Rate',
+                    'gdp_growth': 'Gross Domestic Product Growth Rate',
+                    'interest_rate': 'Bank of Canada Overnight Rate',
+                    'exchange_rate_usd': 'CAD/USD Exchange Rate',
+                    'consumer_price_index': 'Consumer Price Index',
+                    'housing_price_index': 'New Housing Price Index'
+                }
+                
+                name = indicator_names.get(indicator_code, f'Economic Indicator {indicator_code}')
+                
+                insert_query = text("""
+                    INSERT INTO economic_indicators (code, name, description, unit, frequency, source, category, is_active)
+                    VALUES (:code, :name, :description, :unit, :frequency, :source, :category, :is_active)
+                    RETURNING id
+                """)
+                
+                insert_result = await db.execute(insert_query, {
+                    "code": indicator_code,
+                    "name": name,
+                    "description": "Bank of Canada economic indicator",
+                    "unit": "percent",
+                    "frequency": "monthly",
+                    "source": "Bank of Canada",
+                    "category": "economic",
+                    "is_active": True
+                })
+                
+                # Commit the transaction to ensure the indicator is created
+                await db.commit()
+                
+                new_row = insert_result.fetchone()
+                if new_row:
+                    return int(new_row.id)
+                
+                # Fallback: return a default ID
+                return 1
+                
+        except Exception as e:
+            self.logger.error(f"Failed to get/create indicator {indicator_code}: {e}")
+            return 1  # Fallback ID
     
     def _build_insert_query(self, table_name: str, df: pd.DataFrame) -> str:
         """Build INSERT query for DataFrame"""

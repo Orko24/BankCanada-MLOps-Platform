@@ -71,12 +71,57 @@ Built for Bank of Canada technical interview - showcasing real-world central ban
 - **kubectl** installed for Kubernetes management
 
 ### **🎯 Live Application**
-The application is currently deployed and accessible at:
+The full-stack application is currently deployed and accessible at:
 
-- **🔗 Main API**: http://130.107.206.180
-- **📋 API Documentation**: http://130.107.206.180/docs (Swagger UI)
-- **💊 Health Check**: http://130.107.206.180/health
-- **📊 Economic Dashboard**: Configure via frontend settings
+- **🌐 React Frontend**: http://4.204.131.252/ (Main application)
+- **📋 API Documentation**: http://4.204.131.252/api/docs (Swagger UI) 
+- **💊 Health Check**: http://4.204.131.252/api/health
+- **🔗 All API Endpoints**: http://4.204.131.252/api/*
+
+### **📊 Current Deployment Status**
+```bash
+NAME                              READY   STATUS    RESTARTS       AGE
+bankcanada-api-767b44dff6-hppgm   1/1     Running   0              56m
+bankcanada-web-7dfb5586dc-mcgr2   1/1     Running   0              30m
+mlflow-7f88bddd48-5f5gg           0/1     Running   16 (20s ago)   62m
+postgres-b944b4cdb-l2qqg          1/1     Running   0              109m
+redis-54c94b6c45-2x5hp            1/1     Running   0              67m
+
+Services:
+NAME                     TYPE           EXTERNAL-IP     PORT(S)        
+bankcanada-api-service   ClusterIP      10.0.191.137    80/TCP         
+bankcanada-web-service   LoadBalancer   4.204.131.252   80:30870/TCP   
+```
+
+### **🖼️ Application Screenshots**
+
+#### **Economic Dashboard**
+![Economic Dashboard](display_images/Economic_dashboard.png)
+*Main dashboard showing economic indicators and real-time data visualization*
+
+#### **AI Research Assistant** 
+![AI Research Assistant](display_images/AI_researcher.jpg)
+*LangChain-powered economic research with RAG capabilities*
+
+#### **ML Forecasting & Demand Analysis**
+![ML Forecasting](display_images/ML_forecasting_demand.jpg)
+*Machine learning models for economic forecasting and demand prediction*
+
+#### **System Health Monitoring**
+![System Health](display_images/System_Health.jpg)
+*Real-time system monitoring and health checks*
+
+#### **Model Monitoring Dashboard**
+![Model Monitoring](display_images/Model_Monitoring.jpg)
+*MLflow integration for model performance tracking*
+
+#### **Data Quality Monitor**
+![Data Quality](display_images/Data_Quality_Monitor.jpg)
+*Data pipeline monitoring and quality assurance*
+
+#### **Application Settings**
+![Settings](display_images/Settings.jpg)
+*Configuration panel for API keys and external integrations*
 
 ### **📦 Quick Azure Deployment**
 
@@ -241,8 +286,8 @@ kubectl describe deployment bankcanada-api -n mlops-production
 ```
 
 **2. Application Features (3 minutes)**
-- Navigate to live URL: http://130.107.206.180
-- Show API documentation: http://130.107.206.180/docs
+- Navigate to live URL: http://4.204.131.252
+- Show API documentation: http://4.204.131.252/api/docs
 - Demonstrate health checks and monitoring
 - Configure AI agents through frontend
 
@@ -284,29 +329,60 @@ az aks start --name bankcanada-aks-small --resource-group bankcanada-demo-rg
 az group delete --name bankcanada-demo-rg --yes --no-wait
 ```
 
-### **🏗️ Architecture Overview**
+### **🏗️ Live Architecture Overview**
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Azure Portal  │    │  Container       │    │  Kubernetes     │
 │                 │ ──▶│  Registry        │ ──▶│  Service (AKS)  │
-│  Management     │    │  (ACR)           │    │                 │
+│  Management     │    │  (ACR)           │    │  bankcanada-aks │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
                                                         │
                        ┌─────────────────────────────────┴─────┐
-                       │                                       │
-                ┌──────▼─────┐                    ┌──────▼─────┐
-                │ API Pods   │                    │ Services   │
-                │ (FastAPI)  │                    │ LoadBal    │
-                │ 3 replicas │                    │ Public IP  │
-                └────────────┘                    └──────┬─────┘
-                                                         │
-                                              ┌──────────▼──────────┐
-                                              │  130.107.206.180    │
-                                              │  Public Access      │
-                                              │  Port 80 → 8000     │
-                                              └─────────────────────┘
+                       │          mlops-production             │
+                ┌──────▼─────┐  ┌──────▼─────┐   ┌──────▼─────┐
+                │React Web   │  │ API Pods   │   │ Database   │
+                │(Frontend)  │  │ (FastAPI)  │   │ Services   │
+                │1 replica   │  │ 1 replica  │   │PostgreSQL  │
+                └────────────┘  └────────────┘   │Redis       │
+                       │                         │MLflow      │
+                       │                         └────────────┘
+                ┌──────▼──────────────────────────────────────┐
+                │         Load Balancer Service               │
+                │         External IP: 4.204.131.252         │
+                │                                             │
+                │  ┌─────────────┐     ┌─────────────────────┐│
+                │  │  Port 80    │────▶│   React Frontend    ││
+                │  │  (Web UI)   │     │   All Routes        ││
+                │  └─────────────┘     └─────────────────────┘│
+                │                              │              │
+                │                              ▼              │
+                │                      ┌─────────────────────┐│
+                │                      │   Internal Nginx    ││
+                │                      │   /api/* → API Pod  ││
+                │                      │   ClusterIP: 80     ││
+                │                      └─────────────────────┘│
+                └─────────────────────────────────────────────┘
 ```
+
+### **🔗 Service Routing Architecture**
+
+**External Access (Interviewers):**
+- **Frontend**: `http://4.204.131.252/` → React Application
+- **API Docs**: `http://4.204.131.252/api/docs` → FastAPI Swagger UI (proxied)
+- **Health**: `http://4.204.131.252/api/health` → API Health Check (proxied)
+
+**Internal Cluster Communication:**
+- **React → API**: `bankcanada-api-service:80` (ClusterIP)
+- **API → Database**: `postgres-service:5432` (ClusterIP)
+- **API → Cache**: `redis-service:6379` (ClusterIP)
+- **API → MLflow**: `mlflow-service:5000` (ClusterIP)
+
+**Security Model:**
+- ✅ **Only React Frontend** has external IP exposure
+- ✅ **All backend services** are internal ClusterIP only
+- ✅ **API access** only through React proxy routes
+- ✅ **Database/Redis/MLflow** completely internal
 
 ### **🎯 Interview Value Proposition**
 

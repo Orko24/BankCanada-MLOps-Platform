@@ -8,7 +8,7 @@ seaborn==0.13.0
 
 # MLOps and Experiment Tracking
 mlflow==2.9.2
-databricks-cli==0.21.0
+databricks-cli==0.18.0
 azure-ml-cli-v2==2.25.0
 
 # LangChain and AI Agents
@@ -35,12 +35,9 @@ azure-functions==1.18.0
 azure-storage-blob==12.19.0
 azure-keyvault-secrets==4.7.0
 azure-identity==1.15.0
-azure-ml-cli-v2==2.25.0
 
 # Database and Caching
 psycopg2-binary==2.9.9
-sqlalchemy==2.0.25
-redis==5.0.1
 pymongo==4.6.1
 
 # Monitoring and Observability

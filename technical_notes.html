@@ -1,0 +1,667 @@
+<!DOCTYPE html><html><head>
+      <title>technical_notes</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\heman\.cursor\extensions\shd101wyy.markdown-preview-enhanced-0.8.18-universal\crossnote\dependencies\katex\katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="azure-databricks--mlflow-technical-interview-guide">Azure, Databricks &amp; MLflow Technical Interview Guide </h1>
+<h2 id="-azure-fundamentals">🔵 AZURE FUNDAMENTALS </h2>
+<h3 id="core-azure-services">Core Azure Services </h3>
+<h4 id="azure-resource-groups"><strong>Azure Resource Groups</strong> </h4>
+<ul>
+<li>Logical containers for Azure resources</li>
+<li>All resources must belong to exactly one resource group</li>
+<li>Used for access control, billing, and lifecycle management</li>
+<li>Best practice: Group resources by environment (dev/staging/prod) or application</li>
+</ul>
+<h4 id="azure-virtual-networks-vnet"><strong>Azure Virtual Networks (VNet)</strong> </h4>
+<ul>
+<li>Private network in Azure cloud</li>
+<li>Enables secure communication between Azure resources</li>
+<li>Supports subnets, network security groups (NSGs)</li>
+<li>Required for AKS clusters and secure Databricks deployments</li>
+</ul>
+<h4 id="azure-storage-account"><strong>Azure Storage Account</strong> </h4>
+<ul>
+<li>Blob Storage: Object storage for unstructured data (files, images, backups)</li>
+<li>Table Storage: NoSQL key-value store</li>
+<li>Queue Storage: Message queuing service</li>
+<li>File Storage: Managed file shares</li>
+</ul>
+<h4 id="azure-key-vault"><strong>Azure Key Vault</strong> </h4>
+<ul>
+<li>Centralized secrets management</li>
+<li>Store API keys, connection strings, certificates</li>
+<li>Integration with all Azure services</li>
+<li>Hardware Security Module (HSM) backing available</li>
+</ul>
+<h3 id="azure-aiml-services">Azure AI/ML Services </h3>
+<h4 id="azure-machine-learning"><strong>Azure Machine Learning</strong> </h4>
+<ul>
+<li>End-to-end ML lifecycle management</li>
+<li>Automated ML (AutoML) capabilities</li>
+<li>Model deployment and monitoring</li>
+<li>Integration with popular ML frameworks</li>
+<li>Compute instances and clusters for training</li>
+</ul>
+<h4 id="azure-cognitive-services"><strong>Azure Cognitive Services</strong> </h4>
+<ul>
+<li>Pre-built AI models as APIs</li>
+<li>Computer Vision, Speech, Language, Decision services</li>
+<li>No ML expertise required for common AI tasks</li>
+<li>Pay-per-use pricing model</li>
+</ul>
+<h4 id="azure-openai-service"><strong>Azure OpenAI Service</strong> </h4>
+<ul>
+<li>Access to OpenAI models (GPT-4, DALL-E, Codex)</li>
+<li>Enterprise-grade security and compliance</li>
+<li>Fine-tuning capabilities</li>
+<li>Integration with Azure ecosystem</li>
+</ul>
+<h3 id="azure-devops--cicd">Azure DevOps &amp; CI/CD </h3>
+<h4 id="azure-devops-services"><strong>Azure DevOps Services</strong> </h4>
+<ul>
+<li><strong>Azure Repos</strong>: Git repositories with branch policies</li>
+<li><strong>Azure Pipelines</strong>: CI/CD pipelines with YAML or classic editor</li>
+<li><strong>Azure Boards</strong>: Work item tracking and project management</li>
+<li><strong>Azure Test Plans</strong>: Manual and automated testing</li>
+<li><strong>Azure Artifacts</strong>: Package management</li>
+</ul>
+<h4 id="azure-pipelines-key-concepts"><strong>Azure Pipelines Key Concepts</strong> </h4>
+<pre data-role="codeBlock" data-info="yaml" class="language-yaml yaml"><code><span class="token comment"># Example pipeline structure</span>
+<span class="token key atrule">trigger</span><span class="token punctuation">:</span>
+  <span class="token key atrule">branches</span><span class="token punctuation">:</span>
+    <span class="token key atrule">include</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> main
+
+<span class="token key atrule">stages</span><span class="token punctuation">:</span>
+<span class="token punctuation">-</span> <span class="token key atrule">stage</span><span class="token punctuation">:</span> Build
+  <span class="token key atrule">jobs</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">job</span><span class="token punctuation">:</span> BuildJob
+    <span class="token key atrule">steps</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">task</span><span class="token punctuation">:</span> UsePythonVersion@0
+    <span class="token punctuation">-</span> <span class="token key atrule">script</span><span class="token punctuation">:</span> pip install <span class="token punctuation">-</span>r requirements.txt
+    <span class="token punctuation">-</span> <span class="token key atrule">task</span><span class="token punctuation">:</span> PublishTestResults@2
+
+<span class="token punctuation">-</span> <span class="token key atrule">stage</span><span class="token punctuation">:</span> Deploy
+  <span class="token key atrule">dependsOn</span><span class="token punctuation">:</span> Build
+  <span class="token key atrule">jobs</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">deployment</span><span class="token punctuation">:</span> DeployJob
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span> <span class="token string">'production'</span>
+</code></pre><h4 id="azure-functions"><strong>Azure Functions</strong> </h4>
+<ul>
+<li>Serverless compute service</li>
+<li>Event-driven execution</li>
+<li>Multiple triggers: HTTP, Timer, Blob, Queue, Event Hub</li>
+<li>Consumption, Premium, and Dedicated hosting plans</li>
+<li>Perfect for ML model inference endpoints</li>
+</ul>
+<h3 id="azure-security--compliance">Azure Security &amp; Compliance </h3>
+<h4 id="azure-active-directory-azure-ad"><strong>Azure Active Directory (Azure AD)</strong> </h4>
+<ul>
+<li>Identity and access management service</li>
+<li>Single sign-on (SSO) capabilities</li>
+<li>Multi-factor authentication (MFA)</li>
+<li>Role-based access control (RBAC)</li>
+</ul>
+<h4 id="azure-rbac-roles"><strong>Azure RBAC Roles</strong> </h4>
+<ul>
+<li><strong>Reader</strong>: View resources only</li>
+<li><strong>Contributor</strong>: Manage resources (no access management)</li>
+<li><strong>Owner</strong>: Full access including access management</li>
+<li>Custom roles for specific needs</li>
+</ul>
+<hr>
+<h2 id="-azure-kubernetes-service-aks">⚓ AZURE KUBERNETES SERVICE (AKS) </h2>
+<h3 id="aks-fundamentals">AKS Fundamentals </h3>
+<h4 id="what-is-aks"><strong>What is AKS?</strong> </h4>
+<ul>
+<li>Managed Kubernetes service in Azure</li>
+<li>Azure handles master nodes (control plane)</li>
+<li>You manage worker nodes and applications</li>
+<li>Automatic updates and scaling capabilities</li>
+</ul>
+<h4 id="key-aks-components"><strong>Key AKS Components</strong> </h4>
+<ul>
+<li><strong>Cluster</strong>: Complete Kubernetes environment</li>
+<li><strong>Node Pool</strong>: Group of VMs with same configuration</li>
+<li><strong>Pod</strong>: Smallest deployable unit (one or more containers)</li>
+<li><strong>Service</strong>: Network endpoint for pod access</li>
+<li><strong>Ingress</strong>: HTTP/HTTPS routing to services</li>
+</ul>
+<h3 id="aks-architecture">AKS Architecture </h3>
+<h4 id="control-plane-azure-managed"><strong>Control Plane (Azure Managed)</strong> </h4>
+<ul>
+<li>API Server: Kubernetes API endpoint</li>
+<li>etcd: Key-value store for cluster state</li>
+<li>Scheduler: Assigns pods to nodes</li>
+<li>Controller Manager: Manages cluster state</li>
+</ul>
+<h4 id="worker-nodes-your-responsibility"><strong>Worker Nodes (Your Responsibility)</strong> </h4>
+<ul>
+<li>kubelet: Node agent communicating with control plane</li>
+<li>kube-proxy: Network proxy for services</li>
+<li>Container Runtime: Docker or containerd</li>
+</ul>
+<h3 id="aks-networking">AKS Networking </h3>
+<h4 id="network-models"><strong>Network Models</strong> </h4>
+<ul>
+<li><strong>Kubenet</strong>: Basic networking, Azure manages routing</li>
+<li><strong>Azure CNI</strong>: Advanced networking, pods get VNet IPs</li>
+<li><strong>Azure CNI Overlay</strong>: Hybrid approach for IP conservation</li>
+</ul>
+<h4 id="load-balancing"><strong>Load Balancing</strong> </h4>
+<ul>
+<li><strong>Azure Load Balancer</strong>: Layer 4 load balancing</li>
+<li><strong>Application Gateway</strong>: Layer 7 with WAF capabilities</li>
+<li><strong>Ingress Controllers</strong>: NGINX, Application Gateway Ingress Controller</li>
+</ul>
+<h3 id="aks-security">AKS Security </h3>
+<h4 id="authentication--authorization"><strong>Authentication &amp; Authorization</strong> </h4>
+<ul>
+<li>Azure AD integration for cluster access</li>
+<li>Kubernetes RBAC for fine-grained permissions</li>
+<li>Pod Security Standards for runtime security</li>
+</ul>
+<h4 id="network-security"><strong>Network Security</strong> </h4>
+<ul>
+<li>Network Security Groups (NSGs)</li>
+<li>Azure Firewall for egress filtering</li>
+<li>Private clusters (no public API endpoint)</li>
+</ul>
+<h3 id="aks-for-ml-workloads">AKS for ML Workloads </h3>
+<h4 id="gpu-node-pools"><strong>GPU Node Pools</strong> </h4>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># Create GPU-enabled node pool</span>
+az aks nodepool <span class="token function">add</span> <span class="token punctuation">\</span>
+    --resource-group myResourceGroup <span class="token punctuation">\</span>
+    --cluster-name myAKSCluster <span class="token punctuation">\</span>
+    <span class="token parameter variable">--name</span> gpunodepool <span class="token punctuation">\</span>
+    --node-count <span class="token number">1</span> <span class="token punctuation">\</span>
+    --node-vm-size Standard_NC6s_v3 <span class="token punctuation">\</span>
+    --enable-cluster-autoscaler <span class="token punctuation">\</span>
+    --min-count <span class="token number">1</span> <span class="token punctuation">\</span>
+    --max-count <span class="token number">3</span>
+</code></pre><h4 id="ml-deployment-patterns"><strong>ML Deployment Patterns</strong> </h4>
+<ul>
+<li><strong>Batch Jobs</strong>: Kubernetes Jobs for training</li>
+<li><strong>Real-time Inference</strong>: Deployments with autoscaling</li>
+<li><strong>Model Serving</strong>: Multiple models with canary deployments</li>
+</ul>
+<hr>
+<h2 id="-databricks-comprehensive-guide">🧱 DATABRICKS COMPREHENSIVE GUIDE </h2>
+<h3 id="databricks-architecture">Databricks Architecture </h3>
+<h4 id="core-components"><strong>Core Components</strong> </h4>
+<ul>
+<li><strong>Control Plane</strong>: Databricks-managed services (web UI, job scheduler, notebook server)</li>
+<li><strong>Data Plane</strong>: Your cloud account (compute, storage)</li>
+<li><strong>Workspace</strong>: Collaborative environment for teams</li>
+<li><strong>Clusters</strong>: Managed Spark clusters for computation</li>
+</ul>
+<h4 id="databricks-runtime"><strong>Databricks Runtime</strong> </h4>
+<ul>
+<li>Optimized Apache Spark distribution</li>
+<li>Pre-installed libraries (ML, deep learning, visualization)</li>
+<li>Delta Lake included by default</li>
+<li>Automatic optimization features</li>
+</ul>
+<h3 id="databricks-compute">Databricks Compute </h3>
+<h4 id="cluster-types"><strong>Cluster Types</strong> </h4>
+<ul>
+<li><strong>All-Purpose Clusters</strong>: Interactive development and ad-hoc analysis</li>
+<li><strong>Job Clusters</strong>: Automated workloads, automatically terminated</li>
+<li><strong>SQL Warehouses</strong>: Optimized for SQL analytics</li>
+<li><strong>Machine Learning Clusters</strong>: Pre-configured for ML workloads</li>
+</ul>
+<h4 id="autoscaling--optimization"><strong>Autoscaling &amp; Optimization</strong> </h4>
+<ul>
+<li><strong>Cluster Autoscaling</strong>: Automatic worker node adjustment</li>
+<li><strong>Auto Termination</strong>: Automatic cluster shutdown when idle</li>
+<li><strong>Spot Instances</strong>: Cost optimization with preemptible VMs</li>
+<li><strong>Photon Engine</strong>: Vectorized query engine for 2-5x speedup</li>
+</ul>
+<h3 id="delta-lake">Delta Lake </h3>
+<h4 id="what-is-delta-lake"><strong>What is Delta Lake?</strong> </h4>
+<ul>
+<li>Open-source storage layer for data lakes</li>
+<li>ACID transactions on data lakes</li>
+<li>Schema enforcement and evolution</li>
+<li>Time travel (data versioning)</li>
+<li>Unified batch and streaming</li>
+</ul>
+<h4 id="key-features"><strong>Key Features</strong> </h4>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># Schema enforcement</span>
+df<span class="token punctuation">.</span>write<span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span><span class="token string">"delta"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"mergeSchema"</span><span class="token punctuation">,</span> <span class="token string">"true"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"/path/to/table"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Time travel</span>
+df <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span><span class="token string">"delta"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"timestampAsOf"</span><span class="token punctuation">,</span> <span class="token string">"2023-01-01"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">"/path/to/table"</span><span class="token punctuation">)</span>
+df <span class="token operator">=</span> spark<span class="token punctuation">.</span>read<span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span><span class="token string">"delta"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>option<span class="token punctuation">(</span><span class="token string">"versionAsOf"</span><span class="token punctuation">,</span> <span class="token string">"1"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">"/path/to/table"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># MERGE operations (upserts)</span>
+<span class="token keyword keyword-from">from</span> delta<span class="token punctuation">.</span>tables <span class="token keyword keyword-import">import</span> DeltaTable
+deltaTable <span class="token operator">=</span> DeltaTable<span class="token punctuation">.</span>forPath<span class="token punctuation">(</span>spark<span class="token punctuation">,</span> <span class="token string">"/path/to/table"</span><span class="token punctuation">)</span>
+deltaTable<span class="token punctuation">.</span>alias<span class="token punctuation">(</span><span class="token string">"target"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>merge<span class="token punctuation">(</span>
+    source<span class="token punctuation">.</span>alias<span class="token punctuation">(</span><span class="token string">"source"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token string">"target.id = source.id"</span>
+<span class="token punctuation">)</span><span class="token punctuation">.</span>whenMatchedUpdate<span class="token punctuation">(</span><span class="token builtin">set</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"value"</span><span class="token punctuation">:</span> <span class="token string">"source.value"</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>execute<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre><h3 id="databricks-notebooks">Databricks Notebooks </h3>
+<h4 id="notebook-features"><strong>Notebook Features</strong> </h4>
+<ul>
+<li><strong>Multiple Languages</strong>: Python, Scala, SQL, R in same notebook</li>
+<li><strong>Magic Commands</strong>: <code>%sql</code>, <code>%python</code>, <code>%scala</code>, <code>%r</code>, <code>%sh</code></li>
+<li><strong>Visualization</strong>: Built-in charts and graphs</li>
+<li><strong>Collaboration</strong>: Real-time collaboration, comments, version control</li>
+</ul>
+<h4 id="advanced-notebook-patterns"><strong>Advanced Notebook Patterns</strong> </h4>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># Parameterized notebooks</span>
+dbutils<span class="token punctuation">.</span>widgets<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token string">"database"</span><span class="token punctuation">,</span> <span class="token string">"default"</span><span class="token punctuation">,</span> <span class="token string">"Database name"</span><span class="token punctuation">)</span>
+database <span class="token operator">=</span> dbutils<span class="token punctuation">.</span>widgets<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"database"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Cross-language data sharing</span>
+<span class="token comment"># Python cell</span>
+temp_df <span class="token operator">=</span> spark<span class="token punctuation">.</span>createDataFrame<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"John"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token string">"Jane"</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"id"</span><span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+temp_df<span class="token punctuation">.</span>createOrReplaceTempView<span class="token punctuation">(</span><span class="token string">"temp_table"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># SQL cell</span>
+<span class="token operator">%</span>sql
+SELECT <span class="token operator">*</span> FROM temp_table WHERE <span class="token builtin">id</span> <span class="token operator">=</span> <span class="token number">1</span>
+</code></pre><h3 id="databricks-jobs--workflows">Databricks Jobs &amp; Workflows </h3>
+<h4 id="job-types"><strong>Job Types</strong> </h4>
+<ul>
+<li><strong>Notebook Jobs</strong>: Execute notebooks with parameters</li>
+<li><strong>JAR Jobs</strong>: Run Scala/Java applications</li>
+<li><strong>Python Wheel Jobs</strong>: Run Python packages</li>
+<li><strong>Delta Live Tables</strong>: Declarative ETL pipelines</li>
+</ul>
+<h4 id="workflow-orchestration"><strong>Workflow Orchestration</strong> </h4>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"ML_Pipeline"</span><span class="token punctuation">,</span>
+  <span class="token property">"tasks"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"task_key"</span><span class="token operator">:</span> <span class="token string">"data_prep"</span><span class="token punctuation">,</span>
+      <span class="token property">"notebook_task"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"notebook_path"</span><span class="token operator">:</span> <span class="token string">"/Shared/data_preparation"</span><span class="token punctuation">,</span>
+        <span class="token property">"base_parameters"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"input_path"</span><span class="token operator">:</span> <span class="token string">"/data/raw"</span><span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"task_key"</span><span class="token operator">:</span> <span class="token string">"model_training"</span><span class="token punctuation">,</span>
+      <span class="token property">"depends_on"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token property">"task_key"</span><span class="token operator">:</span> <span class="token string">"data_prep"</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">"notebook_task"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"notebook_path"</span><span class="token operator">:</span> <span class="token string">"/Shared/model_training"</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre><h3 id="databricks-sql">Databricks SQL </h3>
+<h4 id="sql-warehouses"><strong>SQL Warehouses</strong> </h4>
+<ul>
+<li>Serverless or classic SQL warehouses</li>
+<li>Auto-scaling and auto-suspend</li>
+<li>BI tool integration (Power BI, Tableau)</li>
+<li>Query history and performance optimization</li>
+</ul>
+<h4 id="advanced-sql-features"><strong>Advanced SQL Features</strong> </h4>
+<pre data-role="codeBlock" data-info="sql" class="language-sql sql"><code><span class="token comment">-- Delta Lake specific functions</span>
+<span class="token keyword keyword-SELECT">SELECT</span> <span class="token operator">*</span> <span class="token keyword keyword-FROM">FROM</span> table_name VERSION <span class="token keyword keyword-AS">AS</span> <span class="token keyword keyword-OF">OF</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword keyword-SELECT">SELECT</span> <span class="token operator">*</span> <span class="token keyword keyword-FROM">FROM</span> table_name <span class="token keyword keyword-TIMESTAMP">TIMESTAMP</span> <span class="token keyword keyword-AS">AS</span> <span class="token keyword keyword-OF">OF</span> <span class="token string">'2023-01-01'</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- Optimization commands</span>
+<span class="token keyword keyword-OPTIMIZE">OPTIMIZE</span> table_name<span class="token punctuation">;</span>
+<span class="token keyword keyword-OPTIMIZE">OPTIMIZE</span> table_name ZORDER <span class="token keyword keyword-BY">BY</span> <span class="token punctuation">(</span>column1<span class="token punctuation">,</span> column2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- Vacuum old files</span>
+VACUUM table_name RETAIN <span class="token number">168</span> HOURS<span class="token punctuation">;</span>
+</code></pre><h3 id="databricks-security">Databricks Security </h3>
+<h4 id="access-control"><strong>Access Control</strong> </h4>
+<ul>
+<li><strong>Workspace Access Control</strong>: User and group permissions</li>
+<li><strong>Table Access Control</strong>: Fine-grained data permissions</li>
+<li><strong>Cluster Access Control</strong>: Who can use which clusters</li>
+<li><strong>Secret Management</strong>: Integration with Azure Key Vault</li>
+</ul>
+<h4 id="data-governance"><strong>Data Governance</strong> </h4>
+<ul>
+<li><strong>Unity Catalog</strong>: Centralized metadata and governance</li>
+<li><strong>Lineage Tracking</strong>: Data and ML model lineage</li>
+<li><strong>Audit Logging</strong>: Comprehensive activity logging</li>
+<li><strong>Compliance</strong>: GDPR, HIPAA, SOX support</li>
+</ul>
+<hr>
+<h2 id="-mlflow-comprehensive-guide">🤖 MLFLOW COMPREHENSIVE GUIDE </h2>
+<h3 id="mlflow-components">MLflow Components </h3>
+<h4 id="mlflow-tracking"><strong>MLflow Tracking</strong> </h4>
+<ul>
+<li><strong>Experiments</strong>: Group related runs</li>
+<li><strong>Runs</strong>: Individual model training execution</li>
+<li><strong>Metrics</strong>: Numerical values (accuracy, loss)</li>
+<li><strong>Parameters</strong>: Input values (learning_rate, batch_size)</li>
+<li><strong>Artifacts</strong>: Files (models, plots, data)</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token keyword keyword-import">import</span> mlflow
+<span class="token keyword keyword-import">import</span> mlflow<span class="token punctuation">.</span>sklearn
+
+<span class="token comment"># Start MLflow run</span>
+<span class="token keyword keyword-with">with</span> mlflow<span class="token punctuation">.</span>start_run<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># Log parameters</span>
+    mlflow<span class="token punctuation">.</span>log_param<span class="token punctuation">(</span><span class="token string">"n_estimators"</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span>
+    mlflow<span class="token punctuation">.</span>log_param<span class="token punctuation">(</span><span class="token string">"max_depth"</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">)</span>
+    
+    <span class="token comment"># Train model</span>
+    model <span class="token operator">=</span> RandomForestClassifier<span class="token punctuation">(</span>n_estimators<span class="token operator">=</span><span class="token number">100</span><span class="token punctuation">,</span> max_depth<span class="token operator">=</span><span class="token number">6</span><span class="token punctuation">)</span>
+    model<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>X_train<span class="token punctuation">,</span> y_train<span class="token punctuation">)</span>
+    
+    <span class="token comment"># Log metrics</span>
+    accuracy <span class="token operator">=</span> model<span class="token punctuation">.</span>score<span class="token punctuation">(</span>X_test<span class="token punctuation">,</span> y_test<span class="token punctuation">)</span>
+    mlflow<span class="token punctuation">.</span>log_metric<span class="token punctuation">(</span><span class="token string">"accuracy"</span><span class="token punctuation">,</span> accuracy<span class="token punctuation">)</span>
+    
+    <span class="token comment"># Log model</span>
+    mlflow<span class="token punctuation">.</span>sklearn<span class="token punctuation">.</span>log_model<span class="token punctuation">(</span>model<span class="token punctuation">,</span> <span class="token string">"random_forest_model"</span><span class="token punctuation">)</span>
+</code></pre><h4 id="mlflow-projects"><strong>MLflow Projects</strong> </h4>
+<ul>
+<li>Packaging ML code for reproducible runs</li>
+<li>Conda/Docker environment specification</li>
+<li>Parameters and entry points definition</li>
+</ul>
+<pre data-role="codeBlock" data-info="yaml" class="language-yaml yaml"><code><span class="token comment"># MLproject file</span>
+<span class="token key atrule">name</span><span class="token punctuation">:</span> my_project
+<span class="token key atrule">conda_env</span><span class="token punctuation">:</span> conda.yaml
+
+<span class="token key atrule">entry_points</span><span class="token punctuation">:</span>
+  <span class="token key atrule">main</span><span class="token punctuation">:</span>
+    <span class="token key atrule">parameters</span><span class="token punctuation">:</span>
+      <span class="token key atrule">alpha</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token key atrule">type</span><span class="token punctuation">:</span> float<span class="token punctuation">,</span> <span class="token key atrule">default</span><span class="token punctuation">:</span> <span class="token number">0.5</span><span class="token punctuation">}</span>
+      <span class="token key atrule">l1_ratio</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token key atrule">type</span><span class="token punctuation">:</span> float<span class="token punctuation">,</span> <span class="token key atrule">default</span><span class="token punctuation">:</span> <span class="token number">0.1</span><span class="token punctuation">}</span>
+    <span class="token key atrule">command</span><span class="token punctuation">:</span> <span class="token string">"python train.py --alpha {alpha} --l1-ratio {l1_ratio}"</span>
+</code></pre><h4 id="mlflow-models"><strong>MLflow Models</strong> </h4>
+<ul>
+<li>Standard format for ML models</li>
+<li>Multiple "flavors" (sklearn, pytorch, tensorflow)</li>
+<li>Local and remote deployment options</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># Register model</span>
+mlflow<span class="token punctuation">.</span>register_model<span class="token punctuation">(</span>
+    model_uri<span class="token operator">=</span><span class="token string">"runs:/{}/model"</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>run_id<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    name<span class="token operator">=</span><span class="token string">"ProductionModel"</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment"># Load model for inference</span>
+model <span class="token operator">=</span> mlflow<span class="token punctuation">.</span>pyfunc<span class="token punctuation">.</span>load_model<span class="token punctuation">(</span>
+    model_uri<span class="token operator">=</span><span class="token string">"models:/ProductionModel/1"</span>
+<span class="token punctuation">)</span>
+predictions <span class="token operator">=</span> model<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>new_data<span class="token punctuation">)</span>
+</code></pre><h4 id="mlflow-model-registry"><strong>MLflow Model Registry</strong> </h4>
+<ul>
+<li>Centralized model repository</li>
+<li>Model versioning and stage management</li>
+<li>Model annotations and descriptions</li>
+</ul>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token keyword keyword-from">from</span> mlflow<span class="token punctuation">.</span>tracking <span class="token keyword keyword-import">import</span> MlflowClient
+
+client <span class="token operator">=</span> MlflowClient<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Transition model to production</span>
+client<span class="token punctuation">.</span>transition_model_version_stage<span class="token punctuation">(</span>
+    name<span class="token operator">=</span><span class="token string">"ProductionModel"</span><span class="token punctuation">,</span>
+    version<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>
+    stage<span class="token operator">=</span><span class="token string">"Production"</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment"># Add model description</span>
+client<span class="token punctuation">.</span>update_model_version<span class="token punctuation">(</span>
+    name<span class="token operator">=</span><span class="token string">"ProductionModel"</span><span class="token punctuation">,</span>
+    version<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>
+    description<span class="token operator">=</span><span class="token string">"Random Forest model with 95% accuracy"</span>
+<span class="token punctuation">)</span>
+</code></pre><h3 id="mlflow-in-databricks">MLflow in Databricks </h3>
+<h4 id="managed-mlflow"><strong>Managed MLflow</strong> </h4>
+<ul>
+<li>Automatic experiment tracking</li>
+<li>Integrated with Databricks notebooks</li>
+<li>Centralized model registry</li>
+<li>Enterprise security and access control</li>
+</ul>
+<h4 id="automl-integration"><strong>AutoML Integration</strong> </h4>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token keyword keyword-from">from</span> databricks <span class="token keyword keyword-import">import</span> automl
+
+<span class="token comment"># Automatic ML with MLflow tracking</span>
+summary <span class="token operator">=</span> automl<span class="token punctuation">.</span>classify<span class="token punctuation">(</span>
+    dataset<span class="token operator">=</span>df<span class="token punctuation">,</span>
+    target_col<span class="token operator">=</span><span class="token string">"target"</span><span class="token punctuation">,</span>
+    timeout_minutes<span class="token operator">=</span><span class="token number">30</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment"># Best model automatically logged to MLflow</span>
+best_trial <span class="token operator">=</span> summary<span class="token punctuation">.</span>best_trial
+model_uri <span class="token operator">=</span> best_trial<span class="token punctuation">.</span>model_path
+</code></pre><h3 id="advanced-mlflow-patterns">Advanced MLflow Patterns </h3>
+<h4 id="model-monitoring--drift-detection"><strong>Model Monitoring &amp; Drift Detection</strong> </h4>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token keyword keyword-import">import</span> mlflow
+<span class="token keyword keyword-from">from</span> evidently<span class="token punctuation">.</span>dashboard <span class="token keyword keyword-import">import</span> Dashboard
+<span class="token keyword keyword-from">from</span> evidently<span class="token punctuation">.</span>tabs <span class="token keyword keyword-import">import</span> DataDriftTab
+
+<span class="token comment"># Log baseline data</span>
+<span class="token keyword keyword-with">with</span> mlflow<span class="token punctuation">.</span>start_run<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    mlflow<span class="token punctuation">.</span>log_artifact<span class="token punctuation">(</span><span class="token string">"baseline_data.csv"</span><span class="token punctuation">)</span>
+    
+    <span class="token comment"># Create drift report</span>
+    drift_dashboard <span class="token operator">=</span> Dashboard<span class="token punctuation">(</span>tabs<span class="token operator">=</span><span class="token punctuation">[</span>DataDriftTab<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    drift_dashboard<span class="token punctuation">.</span>calculate<span class="token punctuation">(</span>reference_data<span class="token punctuation">,</span> current_data<span class="token punctuation">)</span>
+    drift_dashboard<span class="token punctuation">.</span>save<span class="token punctuation">(</span><span class="token string">"drift_report.html"</span><span class="token punctuation">)</span>
+    
+    mlflow<span class="token punctuation">.</span>log_artifact<span class="token punctuation">(</span><span class="token string">"drift_report.html"</span><span class="token punctuation">)</span>
+</code></pre><h4 id="ab-testing-framework"><strong>A/B Testing Framework</strong> </h4>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># Model A/B testing</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">get_model_for_experiment</span><span class="token punctuation">(</span>user_id<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-if">if</span> <span class="token builtin">hash</span><span class="token punctuation">(</span>user_id<span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-return">return</span> mlflow<span class="token punctuation">.</span>pyfunc<span class="token punctuation">.</span>load_model<span class="token punctuation">(</span><span class="token string">"models:/ModelA/Production"</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-else">else</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-return">return</span> mlflow<span class="token punctuation">.</span>pyfunc<span class="token punctuation">.</span>load_model<span class="token punctuation">(</span><span class="token string">"models:/ModelB/Production"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Log experiment results</span>
+<span class="token keyword keyword-with">with</span> mlflow<span class="token punctuation">.</span>start_run<span class="token punctuation">(</span>experiment_id<span class="token operator">=</span><span class="token string">"ab_test_experiment"</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    mlflow<span class="token punctuation">.</span>log_metric<span class="token punctuation">(</span><span class="token string">"conversion_rate_a"</span><span class="token punctuation">,</span> <span class="token number">0.12</span><span class="token punctuation">)</span>
+    mlflow<span class="token punctuation">.</span>log_metric<span class="token punctuation">(</span><span class="token string">"conversion_rate_b"</span><span class="token punctuation">,</span> <span class="token number">0.15</span><span class="token punctuation">)</span>
+    mlflow<span class="token punctuation">.</span>log_metric<span class="token punctuation">(</span><span class="token string">"p_value"</span><span class="token punctuation">,</span> <span class="token number">0.03</span><span class="token punctuation">)</span>
+</code></pre><hr>
+<h2 id="-interview-specific-technical-scenarios">🎯 INTERVIEW-SPECIFIC TECHNICAL SCENARIOS </h2>
+<h3 id="bank-of-canada-use-cases">Bank of Canada Use Cases </h3>
+<h4 id="economic-forecasting-pipeline"><strong>Economic Forecasting Pipeline</strong> </h4>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># Databricks notebook workflow</span>
+<span class="token keyword keyword-import">import</span> mlflow
+<span class="token keyword keyword-from">from</span> pyspark<span class="token punctuation">.</span>sql <span class="token keyword keyword-import">import</span> SparkSession
+<span class="token keyword keyword-from">from</span> pyspark<span class="token punctuation">.</span>ml<span class="token punctuation">.</span>feature <span class="token keyword keyword-import">import</span> VectorAssembler
+<span class="token keyword keyword-from">from</span> pyspark<span class="token punctuation">.</span>ml<span class="token punctuation">.</span>regression <span class="token keyword keyword-import">import</span> RandomForestRegressor
+
+<span class="token comment"># 1. Data ingestion from multiple sources</span>
+economic_data <span class="token operator">=</span> <span class="token punctuation">(</span>spark<span class="token punctuation">.</span>read
+                 <span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span><span class="token string">"delta"</span><span class="token punctuation">)</span>
+                 <span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">"/mnt/economic_indicators"</span><span class="token punctuation">)</span>
+                 <span class="token punctuation">.</span><span class="token builtin">filter</span><span class="token punctuation">(</span><span class="token string">"date &gt;= '2020-01-01'"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 2. Feature engineering</span>
+assembler <span class="token operator">=</span> VectorAssembler<span class="token punctuation">(</span>
+    inputCols<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">"gdp_growth"</span><span class="token punctuation">,</span> <span class="token string">"unemployment"</span><span class="token punctuation">,</span> <span class="token string">"inflation"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    outputCol<span class="token operator">=</span><span class="token string">"features"</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment"># 3. Model training with MLflow</span>
+<span class="token keyword keyword-with">with</span> mlflow<span class="token punctuation">.</span>start_run<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    rf <span class="token operator">=</span> RandomForestRegressor<span class="token punctuation">(</span>featuresCol<span class="token operator">=</span><span class="token string">"features"</span><span class="token punctuation">,</span> labelCol<span class="token operator">=</span><span class="token string">"interest_rate"</span><span class="token punctuation">)</span>
+    model <span class="token operator">=</span> rf<span class="token punctuation">.</span>fit<span class="token punctuation">(</span>features_df<span class="token punctuation">)</span>
+    
+    <span class="token comment"># Log model and metrics</span>
+    mlflow<span class="token punctuation">.</span>spark<span class="token punctuation">.</span>log_model<span class="token punctuation">(</span>model<span class="token punctuation">,</span> <span class="token string">"interest_rate_model"</span><span class="token punctuation">)</span>
+    mlflow<span class="token punctuation">.</span>log_metric<span class="token punctuation">(</span><span class="token string">"rmse"</span><span class="token punctuation">,</span> evaluator<span class="token punctuation">.</span>evaluate<span class="token punctuation">(</span>predictions<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre><h4 id="real-time-model-serving-on-aks"><strong>Real-time Model Serving on AKS</strong> </h4>
+<pre data-role="codeBlock" data-info="yaml" class="language-yaml yaml"><code><span class="token comment"># Kubernetes deployment for model serving</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> apps/v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Deployment
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> economic<span class="token punctuation">-</span>model<span class="token punctuation">-</span>api
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">replicas</span><span class="token punctuation">:</span> <span class="token number">3</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">matchLabels</span><span class="token punctuation">:</span>
+      <span class="token key atrule">app</span><span class="token punctuation">:</span> economic<span class="token punctuation">-</span>model
+  <span class="token key atrule">template</span><span class="token punctuation">:</span>
+    <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+      <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+        <span class="token key atrule">app</span><span class="token punctuation">:</span> economic<span class="token punctuation">-</span>model
+    <span class="token key atrule">spec</span><span class="token punctuation">:</span>
+      <span class="token key atrule">containers</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> model<span class="token punctuation">-</span>server
+        <span class="token key atrule">image</span><span class="token punctuation">:</span> myregistry.azurecr.io/economic<span class="token punctuation">-</span>model<span class="token punctuation">:</span>latest
+        <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">containerPort</span><span class="token punctuation">:</span> <span class="token number">8080</span>
+        <span class="token key atrule">env</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> MLFLOW_TRACKING_URI
+          <span class="token key atrule">value</span><span class="token punctuation">:</span> <span class="token string">"https://databricks-instance.cloud.databricks.com"</span>
+        <span class="token key atrule">resources</span><span class="token punctuation">:</span>
+          <span class="token key atrule">requests</span><span class="token punctuation">:</span>
+            <span class="token key atrule">memory</span><span class="token punctuation">:</span> <span class="token string">"1Gi"</span>
+            <span class="token key atrule">cpu</span><span class="token punctuation">:</span> <span class="token string">"500m"</span>
+          <span class="token key atrule">limits</span><span class="token punctuation">:</span>
+            <span class="token key atrule">memory</span><span class="token punctuation">:</span> <span class="token string">"2Gi"</span>
+            <span class="token key atrule">cpu</span><span class="token punctuation">:</span> <span class="token string">"1"</span>
+</code></pre><h4 id="automated-model-retraining-pipeline"><strong>Automated Model Retraining Pipeline</strong> </h4>
+<pre data-role="codeBlock" data-info="yaml" class="language-yaml yaml"><code><span class="token comment"># Azure DevOps pipeline for MLOps</span>
+<span class="token key atrule">trigger</span><span class="token punctuation">:</span>
+  <span class="token key atrule">schedules</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">cron</span><span class="token punctuation">:</span> <span class="token string">"0 2 * * 1"</span>  <span class="token comment"># Weekly on Monday 2 AM</span>
+    <span class="token key atrule">displayName</span><span class="token punctuation">:</span> Weekly model retraining
+    <span class="token key atrule">branches</span><span class="token punctuation">:</span>
+      <span class="token key atrule">include</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> main
+
+<span class="token key atrule">stages</span><span class="token punctuation">:</span>
+<span class="token punctuation">-</span> <span class="token key atrule">stage</span><span class="token punctuation">:</span> DataValidation
+  <span class="token key atrule">jobs</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">job</span><span class="token punctuation">:</span> ValidateData
+    <span class="token key atrule">steps</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">task</span><span class="token punctuation">:</span> AzureCLI@2
+      <span class="token key atrule">inputs</span><span class="token punctuation">:</span>
+        <span class="token key atrule">azureSubscription</span><span class="token punctuation">:</span> <span class="token string">'databricks-connection'</span>
+        <span class="token key atrule">scriptType</span><span class="token punctuation">:</span> <span class="token string">'bash'</span>
+        <span class="token key atrule">scriptLocation</span><span class="token punctuation">:</span> <span class="token string">'inlineScript'</span>
+        <span class="token key atrule">inlineScript</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
+          databricks jobs run-now --job-id 123  # Data quality job</span>
+
+<span class="token punctuation">-</span> <span class="token key atrule">stage</span><span class="token punctuation">:</span> ModelTraining
+  <span class="token key atrule">dependsOn</span><span class="token punctuation">:</span> DataValidation
+  <span class="token key atrule">jobs</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">job</span><span class="token punctuation">:</span> TrainModel
+    <span class="token key atrule">steps</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">task</span><span class="token punctuation">:</span> AzureCLI@2
+      <span class="token key atrule">inputs</span><span class="token punctuation">:</span>
+        <span class="token key atrule">scriptLocation</span><span class="token punctuation">:</span> <span class="token string">'inlineScript'</span>
+        <span class="token key atrule">inlineScript</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
+          # Trigger Databricks job for model training
+          run_id=$(databricks jobs run-now --job-id 456 --notebook-params '{"retrain": "true"}')
+          echo "Training job started: $run_id"</span>
+
+<span class="token punctuation">-</span> <span class="token key atrule">stage</span><span class="token punctuation">:</span> ModelValidation
+  <span class="token key atrule">dependsOn</span><span class="token punctuation">:</span> ModelTraining
+  <span class="token key atrule">jobs</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">job</span><span class="token punctuation">:</span> ValidateModel
+    <span class="token key atrule">steps</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">script</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string">
+        # Model validation logic
+        python validate_model.py --model-version latest</span>
+</code></pre><h3 id="common-interview-questions--answers">Common Interview Questions &amp; Answers </h3>
+<h4 id="how-would-you-implement-model-drift-detection"><strong>"How would you implement model drift detection?"</strong> </h4>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># Comprehensive drift detection</span>
+<span class="token keyword keyword-import">import</span> mlflow
+<span class="token keyword keyword-from">from</span> evidently<span class="token punctuation">.</span>dashboard <span class="token keyword keyword-import">import</span> Dashboard
+<span class="token keyword keyword-from">from</span> evidently<span class="token punctuation">.</span>tabs <span class="token keyword keyword-import">import</span> DataDriftTab<span class="token punctuation">,</span> CatTargetDriftTab
+
+<span class="token keyword keyword-def">def</span> <span class="token function">detect_model_drift</span><span class="token punctuation">(</span>reference_data<span class="token punctuation">,</span> current_data<span class="token punctuation">,</span> model_name<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-with">with</span> mlflow<span class="token punctuation">.</span>start_run<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># Data drift detection</span>
+        drift_report <span class="token operator">=</span> Dashboard<span class="token punctuation">(</span>tabs<span class="token operator">=</span><span class="token punctuation">[</span>DataDriftTab<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        drift_report<span class="token punctuation">.</span>calculate<span class="token punctuation">(</span>reference_data<span class="token punctuation">,</span> current_data<span class="token punctuation">)</span>
+        
+        <span class="token comment"># Model performance drift</span>
+        model <span class="token operator">=</span> mlflow<span class="token punctuation">.</span>pyfunc<span class="token punctuation">.</span>load_model<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"models:/</span><span class="token interpolation"><span class="token punctuation">{</span>model_name<span class="token punctuation">}</span></span><span class="token string">/Production"</span></span><span class="token punctuation">)</span>
+        current_predictions <span class="token operator">=</span> model<span class="token punctuation">.</span>predict<span class="token punctuation">(</span>current_data<span class="token punctuation">)</span>
+        
+        <span class="token comment"># Log drift metrics</span>
+        drift_score <span class="token operator">=</span> calculate_drift_score<span class="token punctuation">(</span>reference_data<span class="token punctuation">,</span> current_data<span class="token punctuation">)</span>
+        mlflow<span class="token punctuation">.</span>log_metric<span class="token punctuation">(</span><span class="token string">"data_drift_score"</span><span class="token punctuation">,</span> drift_score<span class="token punctuation">)</span>
+        
+        <span class="token comment"># Trigger retraining if drift detected</span>
+        <span class="token keyword keyword-if">if</span> drift_score <span class="token operator">&gt;</span> <span class="token number">0.3</span><span class="token punctuation">:</span>
+            trigger_retraining_pipeline<span class="token punctuation">(</span>model_name<span class="token punctuation">)</span>
+</code></pre><h4 id="how-do-you-ensure-security-in-your-ml-pipeline"><strong>"How do you ensure security in your ML pipeline?"</strong> </h4>
+<ul>
+<li><strong>Data Encryption</strong>: At rest (Delta Lake) and in transit (TLS)</li>
+<li><strong>Access Control</strong>: Azure AD integration with Databricks</li>
+<li><strong>Secret Management</strong>: Azure Key Vault for credentials</li>
+<li><strong>Network Security</strong>: Private endpoints, NSGs, VNet integration</li>
+<li><strong>Audit Logging</strong>: Complete audit trail in Azure Monitor</li>
+<li><strong>Code Security</strong>: DevSecOps with automated security scanning</li>
+</ul>
+<h4 id="explain-your-mlops-maturity-model"><strong>"Explain your MLOps maturity model"</strong> </h4>
+<p><strong>Level 0</strong>: Manual, script-driven process<br>
+<strong>Level 1</strong>: ML pipeline automation<br>
+<strong>Level 2</strong>: CI/CD pipeline automation<br>
+<strong>Level 3</strong>: Automated model monitoring and retraining</p>
+<hr>
+<h2 id="-key-interview-talking-points">🔑 KEY INTERVIEW TALKING POINTS </h2>
+<h3 id="architecture-decisions">Architecture Decisions </h3>
+<ul>
+<li><strong>Why Databricks over EMR?</strong> Better integration with Azure, managed MLflow, collaborative notebooks</li>
+<li><strong>Why AKS over Azure Container Instances?</strong> Better scaling, networking control, enterprise features</li>
+<li><strong>Why Delta Lake over Parquet?</strong> ACID transactions, schema evolution, time travel</li>
+</ul>
+<h3 id="performance-optimization">Performance Optimization </h3>
+<ul>
+<li><strong>Databricks</strong>: Photon engine, Delta optimization, cluster autoscaling</li>
+<li><strong>AKS</strong>: Horizontal Pod Autoscaler, Vertical Pod Autoscaler, node pool scaling</li>
+<li><strong>MLflow</strong>: Model artifact compression, lazy loading, caching strategies</li>
+</ul>
+<h3 id="cost-management">Cost Management </h3>
+<ul>
+<li><strong>Spot instances</strong> for non-critical workloads</li>
+<li><strong>Auto-termination</strong> for idle clusters</li>
+<li><strong>Reserved instances</strong> for predictable workloads</li>
+<li><strong>Resource quotas</strong> and <strong>budgets</strong> for cost control</li>
+</ul>
+<h3 id="disaster-recovery">Disaster Recovery </h3>
+<ul>
+<li><strong>Multi-region</strong> deployments</li>
+<li><strong>Automated backups</strong> for Delta tables</li>
+<li><strong>GitOps</strong> for infrastructure and model versioning</li>
+<li><strong>Blue-green deployments</strong> for zero-downtime updates</li>
+</ul>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bankcanada-web
+  namespace: mlops-production
+  labels:
+    app: bankcanada-web
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bankcanada-web
+  template:
+    metadata:
+      labels:
+        app: bankcanada-web
+        version: v1
+    spec:
+      containers:
+      - name: web
+        image: bankcanadademo.azurecr.io/bankcanada-web:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: REACT_APP_API_URL
+          value: ""
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      imagePullSecrets:
+      - name: acr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bankcanada-web-service
+  namespace: mlops-production
+  labels:
+    app: bankcanada-web
+spec:
+  selector:
+    app: bankcanada-web
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    name: http
+  type: LoadBalancer

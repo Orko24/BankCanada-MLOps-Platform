@@ -110,10 +110,12 @@ kubectl wait --for=condition=available --timeout=300s deployment/mlflow -n $NAME
 echo "🚀 Deploying application to AKS..."
 kubectl apply -f azure/kubernetes/api-deployment.yaml
 kubectl apply -f azure/kubernetes/api-service.yaml
+kubectl apply -f azure/kubernetes/web-deployment.yaml
 
 # Wait for deployment
 echo "⏳ Waiting for deployment to be ready..."
 kubectl wait --for=condition=available --timeout=300s deployment/bankcanada-api -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=300s deployment/bankcanada-web -n $NAMESPACE
 
 # Get service details
 echo "📊 Getting service information..."

@@ -98,10 +98,12 @@ kubectl wait --for=condition=available --timeout=300s deployment/mlflow -n $NAME
 Write-Host "🚀 Deploying application to AKS..." -ForegroundColor Green
 kubectl apply -f azure/kubernetes/api-deployment.yaml
 kubectl apply -f azure/kubernetes/api-service.yaml
+kubectl apply -f azure/kubernetes/web-deployment.yaml
 
 # Wait for deployment
 Write-Host "⏳ Waiting for deployment to be ready..." -ForegroundColor Yellow
 kubectl wait --for=condition=available --timeout=300s deployment/bankcanada-api -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=300s deployment/bankcanada-web -n $NAMESPACE
 
 # Get service details
 Write-Host "📊 Getting service information..." -ForegroundColor Cyan

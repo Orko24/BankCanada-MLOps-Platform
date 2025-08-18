@@ -80,9 +80,14 @@ bankcanada-api-service   LoadBalancer   20.xx.xx.xx     80:xxxxx/TCP
 
 Once deployed, access your Bank of Canada MLOps platform:
 
-- **🔗 API Documentation:** `http://<EXTERNAL-IP>/docs`
-- **🔗 Health Check:** `http://<EXTERNAL-IP>/health`  
-- **🔗 Economic Data API:** `http://<EXTERNAL-IP>/api/economic-data`
+### **Backend API**
+- **🔗 API Documentation:** `http://130.107.206.180/docs`
+- **🔗 Health Check:** `http://130.107.206.180/health`  
+- **🔗 Economic Data API:** `http://130.107.206.180/api/economic-data`
+
+### **React Frontend**
+- **🔗 React App (Port Forward):** `http://localhost:3000`
+- **Note:** Run `kubectl port-forward service/bankcanada-web-service 3000:80 -n mlops-production` to access the React frontend locally
 
 ## 🛠️ **TROUBLESHOOTING**
 

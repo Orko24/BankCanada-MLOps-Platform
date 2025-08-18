@@ -108,7 +108,7 @@ bankcanada-web-service   LoadBalancer   4.204.131.252   80:30870/TCP
 *Machine learning models for economic forecasting and demand prediction*
 
 #### **System Health Monitoring**
-![System Health](display_images/System_Health.jpg)
+![System Health](display_images/Health.jpg)
 *Real-time system monitoring and health checks*
 
 #### **Model Monitoring Dashboard**

@@ -33,10 +33,11 @@ spec:
         - name: MLFLOW_TRACKING_URI
           value: "http://mlflow-service:5000"
         - name: DEEPSEEK_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: api-secrets
-              key: deepseek-key
+          value: "placeholder-key"  # Will be configured via frontend
+        - name: DATABRICKS_HOST
+          value: ""  # Will be configured via frontend
+        - name: DATABRICKS_TOKEN
+          value: ""  # Will be configured via frontend
         resources:
           requests:
             memory: "256Mi"

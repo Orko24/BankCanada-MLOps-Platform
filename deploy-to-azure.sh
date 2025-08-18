@@ -79,15 +79,37 @@ az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME
 echo "📁 Creating Kubernetes namespace..."
 kubectl apply -f azure/kubernetes/namespace.yaml
 
+# Create ACR secret for image pulling
+echo "🔐 Creating ACR secret for image pulling..."
+ACR_USERNAME=$(az acr credential show --name $ACR_NAME --query username --output tsv)
+ACR_PASSWORD=$(az acr credential show --name $ACR_NAME --query passwords[0].value --output tsv)
+kubectl create secret docker-registry acr-secret \
+  --docker-server=$ACR_SERVER \
+  --docker-username=$ACR_USERNAME \
+  --docker-password=$ACR_PASSWORD \
+  --namespace=$NAMESPACE \
+  --dry-run=client -o yaml | kubectl apply -f -
+
 # Update image references in deployment files
 echo "🔄 Updating deployment manifests..."
-sed -i "s|bankcanadamlops.azurecr.io|$ACR_SERVER|g" azure/kubernetes/api-deployment.yaml
+sed -i "s|bankcanadademo.azurecr.io|$ACR_SERVER|g" azure/kubernetes/api-deployment.yaml
+
+# Deploy infrastructure components first (databases, cache)
+echo "🗄️  Deploying infrastructure components..."
+kubectl apply -f azure/kubernetes/postgres-deployment.yaml
+kubectl apply -f azure/kubernetes/redis-deployment.yaml
+kubectl apply -f azure/kubernetes/mlflow-deployment.yaml
+
+# Wait for infrastructure to be ready
+echo "⏳ Waiting for infrastructure components to be ready..."
+kubectl wait --for=condition=available --timeout=300s deployment/postgres -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=300s deployment/redis -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=300s deployment/mlflow -n $NAMESPACE
 
 # Deploy application
 echo "🚀 Deploying application to AKS..."
 kubectl apply -f azure/kubernetes/api-deployment.yaml
 kubectl apply -f azure/kubernetes/api-service.yaml
-kubectl apply -f azure/kubernetes/api-ingress.yaml
 
 # Wait for deployment
 echo "⏳ Waiting for deployment to be ready..."

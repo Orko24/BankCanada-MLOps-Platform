@@ -7,7 +7,7 @@ metadata:
     app: bankcanada-api
     version: v1
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: bankcanada-api
@@ -37,23 +37,27 @@ spec:
           value: ""  # Will be configured via frontend
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
+            memory: "128Mi"
+            cpu: "100m"
           limits:
-            memory: "512Mi"
-            cpu: "500m"
+            memory: "256Mi"
+            cpu: "200m"
         livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 5
+        readinessProbe:
           httpGet:
             path: /health
             port: 8000
           initialDelaySeconds: 30
           periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 10
       imagePullSecrets:
       - name: acr-secret
 ---

@@ -65,17 +65,39 @@ az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME
 Write-Host "📁 Creating Kubernetes namespace..." -ForegroundColor Yellow
 kubectl apply -f azure/kubernetes/namespace.yaml
 
+# Create ACR secret for image pulling
+Write-Host "🔐 Creating ACR secret for image pulling..." -ForegroundColor Yellow
+$ACR_USERNAME = az acr credential show --name $ACR_NAME --query username --output tsv
+$ACR_PASSWORD = az acr credential show --name $ACR_NAME --query passwords[0].value --output tsv
+kubectl create secret docker-registry acr-secret `
+  --docker-server=$ACR_SERVER `
+  --docker-username=$ACR_USERNAME `
+  --docker-password=$ACR_PASSWORD `
+  --namespace=$NAMESPACE `
+  --dry-run=client -o yaml | kubectl apply -f -
+
 # Update image references in deployment files
 Write-Host "🔄 Updating deployment manifests..." -ForegroundColor Yellow
 $deploymentContent = Get-Content azure/kubernetes/api-deployment.yaml -Raw
-$deploymentContent = $deploymentContent -replace "bankcanadamlops.azurecr.io", $ACR_SERVER
+$deploymentContent = $deploymentContent -replace "bankcanadademo.azurecr.io", $ACR_SERVER
 Set-Content azure/kubernetes/api-deployment.yaml $deploymentContent
+
+# Deploy infrastructure components first (databases, cache)
+Write-Host "🗄️  Deploying infrastructure components..." -ForegroundColor Green
+kubectl apply -f azure/kubernetes/postgres-deployment.yaml
+kubectl apply -f azure/kubernetes/redis-deployment.yaml
+kubectl apply -f azure/kubernetes/mlflow-deployment.yaml
+
+# Wait for infrastructure to be ready
+Write-Host "⏳ Waiting for infrastructure components to be ready..." -ForegroundColor Yellow
+kubectl wait --for=condition=available --timeout=300s deployment/postgres -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=300s deployment/redis -n $NAMESPACE
+kubectl wait --for=condition=available --timeout=300s deployment/mlflow -n $NAMESPACE
 
 # Deploy application
 Write-Host "🚀 Deploying application to AKS..." -ForegroundColor Green
 kubectl apply -f azure/kubernetes/api-deployment.yaml
 kubectl apply -f azure/kubernetes/api-service.yaml
-kubectl apply -f azure/kubernetes/api-ingress.yaml
 
 # Wait for deployment
 Write-Host "⏳ Waiting for deployment to be ready..." -ForegroundColor Yellow
